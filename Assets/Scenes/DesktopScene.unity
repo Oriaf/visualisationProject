@@ -1426,6 +1426,7 @@ MonoBehaviour:
   - {fileID: 1580839027}
   - {fileID: 1411628064}
   - {fileID: 1971000954}
+  path: Assets/Recordings/catheter006.txt
   maxPlaybackSpeed: 150
   slider: {fileID: 2031703441}
   phantomSkull: {fileID: 2296330364526986364}

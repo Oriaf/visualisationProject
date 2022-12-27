@@ -9,7 +9,7 @@ using JetBrains.Annotations;
 /*
   Desktop version of script for running the simulation and manipulating certain
   aspects of it. Added functions for controlling playback speed of animation
-  (left and right arrow keys), rewinding/playing (up and down arrows keys) and
+  (up and down arrow keys), rewinding/playing (left and right arrows keys) and
   for toggling the transparency of the brain and skull on and off (Q key). Some
   additional functions exist in the script but were not working as intended
   before user tests were held and therefore not used.
@@ -18,28 +18,45 @@ using JetBrains.Annotations;
 
 public class Simulator : MonoBehaviour
 {
-    public GameObject cathTop, cathTL, cathTR, cathBL, cathBR,
-                    skullTL, skullTR, skullBL, skullBR, skullBrow; //references to marker spheres
+    [Header("Reference Markers")]
+    //references to marker spheres
+    public GameObject cathTop;
+    public GameObject cathTL;
+    public GameObject cathTR;
+    public GameObject cathBL;
+    public GameObject cathBR;
+    public GameObject skullTL;
+    public GameObject skullTR;
+    public GameObject skullBL;
+    public GameObject skullBR;
+    public GameObject skullBrow;
 
-    public GameObject cathCenter, skullCenter;//references to the barycenters of markers
-    public Quaternion cathCenterRot, skullCenterRot;
+    [Header("Barycentric centers of the markers")]
+    //references to the barycenters of markers
+    public GameObject cathCenter;
+    public GameObject  skullCenter;
+    public Quaternion cathCenterRot;
+    public Quaternion skullCenterRot;
 
     private Vector3 cathRight = Vector3.one;
     private Vector3 cathUp = Vector3.one;
 
+    [Header("GUI")]
     public Text[] FrameStuff;
+    public Slider slider; //slider to control the animation speed
 
+    [Header("Simulation")]
+    public string path = "Assets/Recordings/catheter006.txt"; //path to tsv file
+    public float maxPlaybackSpeed = 50f;
     float timeToCall;
     float timeDelay = 1.0f; //the code will be run every 2 seconds
     const string separator = "\t"; //tab separation string
-    string path = "Assets/Recordings/catheter006.txt"; //path to tsv file
     int index, fileSize; //index to cycle through arrays
     bool readyToUpdate;
     bool paused;
     bool rewind;
     bool forward;
     private float playBackSpeed = 1f;
-    public float maxPlaybackSpeed = 50f;
     private float timer = 0;
     private bool transparencyEnabled;
 
@@ -53,9 +70,8 @@ public class Simulator : MonoBehaviour
         y1, y2, y3, y4, y5, y6, y7, y8, y9, y10,
         z1, z2, z3, z4, z5, z6, z7, z8, z9, z10;
 
-    public Slider slider; //slider to control the animation speed
-
     //For material transparency
+    [Header("Rendered Representation")]
     public GameObject phantomSkull;
     public GameObject phantomBrain;
     private Material solidSkullMat;
@@ -99,7 +115,7 @@ public class Simulator : MonoBehaviour
         StreamReader sr = ReadFile(path); //read from file
         fileSize = FindSize(sr); //find size of file
 
-        //initialize offset for 3dmodels
+        //initialize offset for 3d models
         cathCenterRot = cathCenter.transform.rotation;
         skullCenterRot = skullCenter.transform.rotation;  //==> Should be hardcoded and set to private once we have the right alignment
 
@@ -121,7 +137,7 @@ public class Simulator : MonoBehaviour
         //extract and distribute info
         sr.DiscardBufferedData();
         sr.BaseStream.Seek(0, SeekOrigin.Begin);
-        Extract(sr);
+        Extract(sr); // Reads in all data and places it in the relevant arrays
         readyToUpdate = true;
 
         //close reader
@@ -132,7 +148,7 @@ public class Simulator : MonoBehaviour
         skullCenter.gameObject.transform.GetChild(0).transform.localEulerAngles = skullOffsetRot[path];
 
         //For material transparency
-        SetInitialColors();
+        SetInitialColors(); // Sets the skull and brain to have the solid material
 }
 
     private void Update()
@@ -142,7 +158,7 @@ public class Simulator : MonoBehaviour
         {
             ToggleTransparency();
         }
-        if (transparencyEnabled)
+        if (transparencyEnabled) // Check if we want to adjust the transparency (Disabled?)
         {
             if (Input.GetKey(KeyCode.Mouse0))
             {
@@ -154,7 +170,7 @@ public class Simulator : MonoBehaviour
             }
         }
 
-        // Right arrow key plays the animation in the right direction
+        // Right arrow key plays the animation forward in time
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             rewind = false;
@@ -205,7 +221,7 @@ public class Simulator : MonoBehaviour
         // R key restarts scene
         if (Input.GetKeyDown(KeyCode.R))
         {
-            Invoke(nameof(RestartScene), 1f);
+            Invoke(nameof(RestartScene), 1f); // Soft restart the scene (method in this script)
         }
     }
 
@@ -213,6 +229,7 @@ public class Simulator : MonoBehaviour
     void FixedUpdate()
     {
         timer += Time.deltaTime;
+        // If it's the next simulation frame, the markers are set, we have data, we still have more data and we are not paused
         if (timer >= timeToCall && MarkerCheck() && fileSize > 0 && readyToUpdate && !paused)
         {
             //normalize positions
@@ -245,15 +262,20 @@ public class Simulator : MonoBehaviour
                 index++;
             }
 
-            if (index >= fileSize)
+            if (index >= fileSize) // If there is no more data
             {
                 readyToUpdate = false; //stop simulation if eod is reached
-                Invoke(nameof(RestartScene), 1f);
+                Invoke(nameof(RestartScene), 1f); // Soft restart the scene (method in this script)
             }
+
+            // Update timer for the next frame
             timer = 0f;
             timeToCall = timeDelay / playBackSpeed;
+
+            // Place the reference model by the markers
             AlignModels();
 
+            // Update the GUI
             if (FrameStuff[0])
             {
                 FrameStuff[0].text = "Current frame: " + index;
@@ -354,7 +376,7 @@ public class Simulator : MonoBehaviour
     private void Extract(StreamReader reader)
     {
         string line;
-        for (int i = 0; i < 1; i++)         // change to i<5 for catheter_008
+        for (int i = 0; i < 1; i++)         // change to i<5 for catheter_008 (Alexander: I removed the extra header lines and used the regular header instead; no need to make this change)
             line = reader.ReadLine(); //skip headers
         line = reader.ReadLine(); //first line
 
