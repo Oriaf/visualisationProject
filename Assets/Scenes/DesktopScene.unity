@@ -1426,9 +1426,9 @@ MonoBehaviour:
   - {fileID: 1580839027}
   - {fileID: 1411628064}
   - {fileID: 1971000954}
+  slider: {fileID: 2031703441}
   path: Assets/Recordings/catheter006.txt
   maxPlaybackSpeed: 150
-  slider: {fileID: 2031703441}
   phantomSkull: {fileID: 2296330364526986364}
   phantomBrain: {fileID: 2296330364526986363}
   transparentSkullMat: {fileID: 2100000, guid: 6851123c4974f894a9765c2d6be86ae9, type: 2}
