@@ -275,11 +275,6 @@ MonoBehaviour:
   m_TrackedDeviceOrientationAction: {fileID: 7970375526676320489, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
---- !u!1 &84211825 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2296330364611197963, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
-  m_PrefabInstance: {fileID: 2296330364526986362}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &108285240
 GameObject:
   m_ObjectHideFlags: 0
@@ -354,11 +349,6 @@ RectTransform:
   m_AnchoredPosition: {x: -4.9999695, y: 0}
   m_SizeDelta: {x: -20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &209706076 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2296330364734199846, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
-  m_PrefabInstance: {fileID: 2296330364526986362}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &262733103
 GameObject:
   m_ObjectHideFlags: 0
@@ -648,21 +638,6 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 6452418116624880902, guid: d73ca582722265e4cada515025d841f9, type: 3}
   m_PrefabInstance: {fileID: 589216707}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &599763906 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2296330365107482552, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
-  m_PrefabInstance: {fileID: 2296330364526986362}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &633530277 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2296330365143475167, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
-  m_PrefabInstance: {fileID: 2296330364526986362}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &672291089 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2296330365196918123, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
-  m_PrefabInstance: {fileID: 2296330364526986362}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &735513551
 GameObject:
@@ -955,11 +930,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 20edc16a903cffd4b96a9e8b05c19934, type: 3}
---- !u!1 &924041694 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2296330364911666596, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
-  m_PrefabInstance: {fileID: 2296330364526986362}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -1217,11 +1187,6 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
---- !u!1 &1010249846 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2296330364997874700, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
-  m_PrefabInstance: {fileID: 2296330364526986362}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1042571530 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2296330365032686960, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
@@ -1303,11 +1268,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1108194026}
   m_CullTransparentMesh: 1
---- !u!1 &1163806059 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2296330363540947217, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
-  m_PrefabInstance: {fileID: 2296330364526986362}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1246859753
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1408,26 +1368,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a19bc027150a984d9f78b368f2a0510, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cathTop: {fileID: 1568489316}
-  cathTL: {fileID: 924041694}
-  cathTR: {fileID: 1010249846}
-  cathBL: {fileID: 672291089}
-  cathBR: {fileID: 1552925736}
-  skullTL: {fileID: 2024963423}
-  skullTR: {fileID: 599763906}
-  skullBL: {fileID: 209706076}
-  skullBR: {fileID: 84211825}
-  skullBrow: {fileID: 1633082965}
-  cathCenter: {fileID: 633530277}
-  skullCenter: {fileID: 1163806059}
-  cathCenterRot: {x: 0, y: 0, z: 0, w: 0}
-  skullCenterRot: {x: 0, y: 0, z: 0, w: 0}
+  markers: {fileID: 2296330365032686963, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
   FrameStuff:
   - {fileID: 1580839027}
   - {fileID: 1411628064}
   - {fileID: 1971000954}
   slider: {fileID: 2031703441}
-  path: Assets/Recordings/catheter006.txt
+  paths:
+  - Assets/Recordings/catheter006.txt
   maxPlaybackSpeed: 150
   phantomSkull: {fileID: 2296330364526986364}
   phantomBrain: {fileID: 2296330364526986363}
@@ -1893,11 +1841,6 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
---- !u!1 &1552925736 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2296330363378384978, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
-  m_PrefabInstance: {fileID: 2296330364526986362}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1562431134
 GameObject:
   m_ObjectHideFlags: 0
@@ -1974,11 +1917,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1562431134}
   m_CullTransparentMesh: 1
---- !u!1 &1568489316 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2296330363408890654, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
-  m_PrefabInstance: {fileID: 2296330364526986362}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1578059118
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2134,11 +2072,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1580839025}
   m_CullTransparentMesh: 1
---- !u!1 &1633082965 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2296330364010224175, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
-  m_PrefabInstance: {fileID: 2296330364526986362}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1677296982
 GameObject:
   m_ObjectHideFlags: 0
@@ -2661,11 +2594,6 @@ MonoBehaviour:
   annotationMarkers: []
   AnnotationPoint1: {fileID: 1383293475}
   AnnotationPoint2: {fileID: 871440449}
---- !u!1 &2024963423 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2296330363848456485, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
-  m_PrefabInstance: {fileID: 2296330364526986362}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2028923062
 GameObject:
   m_ObjectHideFlags: 0

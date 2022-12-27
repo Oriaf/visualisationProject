@@ -3,7 +3,13 @@ guid: f968de8fd90d54e429c4dd1aa1e76316
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - markers: {fileID: 2296330365032686963, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
+  - slider: {instanceID: 0}
+  - phantomSkull: {instanceID: 0}
+  - phantomBrain: {instanceID: 0}
+  - transparentSkullMat: {fileID: 2100000, guid: 6851123c4974f894a9765c2d6be86ae9, type: 2}
+  - transparentBrainMat: {fileID: 2100000, guid: c055b4f1f2e70a74a9ccf1aec5c39279, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

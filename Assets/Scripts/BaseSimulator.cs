@@ -69,29 +69,29 @@ public class BaseSimulator : MonoBehaviour
     [Header("Simulation")]
     public string[] paths; //"Assets/Recordings/catheter005.txt"; // List of paths to be loaded
     public float maxPlaybackSpeed = 50f;
-    float timeToCall;
-    float timeDelay = 1.0f; //the code will be run every 2 seconds
-    const string separator = "\t"; //tab separation string
-    private int index = 0;
-    bool paused;
-    bool rewind;
-    bool forward;
-    private float playBackSpeed = 1f;
-    private float timer = 0;
-    private bool transparencyEnabled;
-    private List<Data> dataList;
+    protected float timeToCall;
+    protected float timeDelay = 1.0f; //the code will be run every 2 seconds
+    protected const string separator = "\t"; //tab separation string
+    protected int index = 0;
+    protected bool paused;
+    protected bool rewind;
+    protected bool forward;
+    protected float playBackSpeed = 1f;
+    protected float timer = 0;
+    protected bool transparencyEnabled;
+    protected List<Data> dataList;
 
     [Header("Rendered Representation")] //TODO: Move into data?
     public GameObject phantomSkull;
     public GameObject phantomBrain;
-    private Material solidSkullMat;
-    private Material solidBrainMat;
+    protected Material solidSkullMat;
+    protected Material solidBrainMat;
 
     public Material transparentSkullMat;
     public Material transparentBrainMat;
 
     //Custom transform coordinates for the skull
-    private Dictionary<String, Vector3> skullOffsetPos = new Dictionary<String, Vector3> {
+    protected Dictionary<String, Vector3> skullOffsetPos = new Dictionary<String, Vector3> {
         {"Assets/Recordings/catheter001.txt",new Vector3(-0.939999998f,-14.1099997f,5.55000019f)}, //file : cathether001 NOT WELL ALIGNED
         {"Assets/Recordings/catheter002.txt", new Vector3(-1.88f,-13.8599997f,4.67000008f) }, //file : cathether002 NOT WELL ALIGNED
         {"Assets/Recordings/catheter003.txt", new Vector3(-1.10000002f,-14.1099997f,6.32000017f)}, //file : cathether003
@@ -100,7 +100,7 @@ public class BaseSimulator : MonoBehaviour
         {"Assets/Recordings/catheter006.txt",new Vector3(-0.639999986f,-12.6899996f,5.57000017f) }, //file : cathether006
         {"Assets/Recordings/catheter007.txt",new Vector3(-0.850000024f,-14.1099997f,5.6500001f) } //file : cathether007
         };
-    private Dictionary<String, Vector3> skullOffsetRot = new Dictionary<String, Vector3> {
+    protected Dictionary<String, Vector3> skullOffsetRot = new Dictionary<String, Vector3> {
         {"Assets/Recordings/catheter001.txt",new Vector3(38.116478f,177.862823f,358.404968f)}, //file : cathether001
         {"Assets/Recordings/catheter002.txt", new Vector3(42.3742065f,181.589996f,3.92515182f) }, //file : cathether002
         {"Assets/Recordings/catheter003.txt", new Vector3(43.9130974f,177.666306f,358.909271f) }, //file : cathether003
@@ -110,7 +110,7 @@ public class BaseSimulator : MonoBehaviour
         {"Assets/Recordings/catheter007.txt",new Vector3(41.510006f,177.755005f,359.040009f) } //file : cathether007
         };
 
-    protected void init()
+    protected virtual void init()
     {
         // Should be overriden if a specific implementation needs to initialise something
     }
@@ -137,12 +137,12 @@ public class BaseSimulator : MonoBehaviour
         SetInitialColors();
     }
 
-    protected void handleInput()
+    protected virtual void handleInput()
     {
         // Should be overriden with the implementation specific controlls
     }
 
-    private void Update()
+    protected void Update()
     {
         handleInput();
 
@@ -512,7 +512,7 @@ public class BaseSimulator : MonoBehaviour
         }
     }
 
-    private void RestartScene()
+    protected void RestartScene()
     {
         Debug.Log("Restart");
         //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -526,7 +526,7 @@ public class BaseSimulator : MonoBehaviour
         timer = 0;
     }
 
-    private void ToggleTransparency()
+    protected void ToggleTransparency()
     {
         Debug.Log("Transparency Enabled: " + transparencyEnabled);
         Renderer skullRenderer = phantomSkull.GetComponent<Renderer>();
@@ -543,7 +543,7 @@ public class BaseSimulator : MonoBehaviour
             transparencyEnabled = false;
         }
     }
-    private void SetInitialColors()
+    protected void SetInitialColors()
     {
         Renderer skullRenderer = phantomSkull.GetComponent<Renderer>();
         solidSkullMat = skullRenderer.material;
@@ -572,5 +572,10 @@ public class BaseSimulator : MonoBehaviour
     {
         Renderer brainRenderer = phantomBrain.GetComponent<Renderer>();
         brainRenderer.material = solidBrainMat;
+    }
+
+    public int GetCurrentIndex()
+    {
+        return index;
     }
 }
