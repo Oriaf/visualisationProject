@@ -439,66 +439,6 @@ PrefabInstance:
       objectReference: {fileID: -2432090755550338912, guid: e521e99d6d24ebc4c81363e86f057f98, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
---- !u!1 &251215860 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2296330364010224175, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
-  m_PrefabInstance: {fileID: 251215859}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &251215861 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2296330364611197963, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
-  m_PrefabInstance: {fileID: 251215859}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &251215862 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2296330364734199846, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
-  m_PrefabInstance: {fileID: 251215859}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &251215863 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2296330365107482552, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
-  m_PrefabInstance: {fileID: 251215859}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &251215864 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2296330363848456485, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
-  m_PrefabInstance: {fileID: 251215859}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &251215865 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2296330363540947217, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
-  m_PrefabInstance: {fileID: 251215859}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &251215866 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2296330363378384978, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
-  m_PrefabInstance: {fileID: 251215859}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &251215867 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2296330365196918123, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
-  m_PrefabInstance: {fileID: 251215859}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &251215868 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2296330364997874700, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
-  m_PrefabInstance: {fileID: 251215859}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &251215869 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2296330364911666596, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
-  m_PrefabInstance: {fileID: 251215859}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &251215870 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2296330363408890654, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
-  m_PrefabInstance: {fileID: 251215859}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &251215871 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2296330365143475167, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
-  m_PrefabInstance: {fileID: 251215859}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &425814907 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2490345694075435214, guid: 2d4dcac876545114a9b90569597da1b2, type: 3}
@@ -824,23 +764,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a19bc027150a984d9f78b368f2a0510, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cathTop: {fileID: 251215870}
-  cathTL: {fileID: 251215869}
-  cathTR: {fileID: 251215868}
-  cathBL: {fileID: 251215867}
-  cathBR: {fileID: 251215866}
-  skullTL: {fileID: 251215864}
-  skullTR: {fileID: 251215863}
-  skullBL: {fileID: 251215862}
-  skullBR: {fileID: 251215861}
-  skullBrow: {fileID: 251215860}
-  cathCenter: {fileID: 251215871}
-  skullCenter: {fileID: 251215865}
-  cathCenterRot: {x: 0, y: 0, z: 0, w: 0}
-  skullCenterRot: {x: 0, y: 0, z: 0, w: 0}
+  markers: {fileID: 0}
   FrameStuff: []
-  maxPlaybackSpeed: 50
   slider: {fileID: 2031703441}
+  paths: []
+  maxPlaybackSpeed: 50
   phantomSkull: {fileID: 0}
   phantomBrain: {fileID: 0}
   transparentSkullMat: {fileID: 0}
@@ -872,35 +800,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdef9a89608fd1040b0902bd7d51918e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cathTop: {fileID: 251215870}
-  cathTL: {fileID: 251215869}
-  cathTR: {fileID: 251215868}
-  cathBL: {fileID: 251215867}
-  cathBR: {fileID: 251215866}
-  skullTL: {fileID: 251215864}
-  skullTR: {fileID: 251215863}
-  skullBL: {fileID: 251215862}
-  skullBR: {fileID: 251215861}
-  skullBrow: {fileID: 251215860}
-  cathCenter: {fileID: 251215871}
-  skullCenter: {fileID: 251215865}
-  cathCenterRot: {x: 0, y: 0, z: 0, w: 0}
-  skullCenterRot: {x: 0, y: 0, z: 0, w: 0}
+  markers: {fileID: 2296330365032686963, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
+  FrameStuff:
+  - {fileID: 1654160213}
+  - {fileID: 1178738489}
+  - {fileID: 425814907}
+  slider: {fileID: 2031703441}
+  paths:
+  - Assets/Recordings/catheter006.txt
+  maxPlaybackSpeed: 150
+  phantomSkull: {fileID: 1554036188}
+  phantomBrain: {fileID: 1554036187}
+  transparentSkullMat: {fileID: 2100000, guid: 6851123c4974f894a9765c2d6be86ae9, type: 2}
+  transparentBrainMat: {fileID: 2100000, guid: c055b4f1f2e70a74a9ccf1aec5c39279, type: 2}
   leftVRController: {fileID: 99851664}
   timeController: {fileID: 4826890894652462616, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   transparencyController: {fileID: 6826371102190220578, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   toggleTransparent: {fileID: -2425372059492432088, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   annotatePoint: {fileID: -6305722980727576620, guid: c348712bda248c246b8c49b3db54643f, type: 3}
-  FrameStuff:
-  - {fileID: 1654160213}
-  - {fileID: 1178738489}
-  - {fileID: 425814907}
-  maxPlaybackSpeed: 150
-  slider: {fileID: 2031703441}
-  phantomSkull: {fileID: 1554036188}
-  phantomBrain: {fileID: 1554036187}
-  transparentSkullMat: {fileID: 2100000, guid: 6851123c4974f894a9765c2d6be86ae9, type: 2}
-  transparentBrainMat: {fileID: 2100000, guid: c055b4f1f2e70a74a9ccf1aec5c39279, type: 2}
 --- !u!1 &1554036187 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 30429248745398415, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
