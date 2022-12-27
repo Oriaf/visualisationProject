@@ -82,10 +82,11 @@ public class AnnotationScript : MonoBehaviour
             //VR CONTROLLER ANNOTATION INPUT
         }
 
-        if (Input.GetKeyDown(KeyCode.Return) && annotationIndex > 0)
+        if (Input.GetKeyDown(KeyCode.Return) && annotationIndex > 0) // Removes the last anotation?
         {
-            annotationPoints[annotationIndex] = 0;
+            //annotationPoints[annotationIndex] = 0; // Out of bounds? Unused array?
             annotationIndex -= 1;
+            Destroy(annotationMarkers[annotationMarkers.Count - 1]);
             annotationMarkers.RemoveAt(annotationMarkers.Count - 1);
         }
 
@@ -149,7 +150,7 @@ public class AnnotationScript : MonoBehaviour
         }
         laserActive = false;
         annotationIndex += 1;
-        if (annotationIndex == 1 || annotationIndex == 2)
+        if (annotationIndex == 1 || annotationIndex == 2) // Instantiates the correct marker and adds it to the annotationMarkers list
         {
             BrainCollider.enabled = false;
             AnnotationPoint1.SetActive(false);
