@@ -1985,6 +1985,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5347637687557509488, guid: 00e0dea6bd815044a8e5ad7014a20ec5, type: 3}
+      propertyPath: xSens
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 5347637687557509488, guid: 00e0dea6bd815044a8e5ad7014a20ec5, type: 3}
+      propertyPath: ySens
+      value: 500
+      objectReference: {fileID: 0}
     - target: {fileID: 5347637687557509489, guid: 00e0dea6bd815044a8e5ad7014a20ec5, type: 3}
       propertyPath: m_RootOrder
       value: 1
