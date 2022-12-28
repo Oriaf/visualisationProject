@@ -333,10 +333,7 @@ public class BaseSimulator : MonoBehaviour
 
     private void warpDataInterpolateHelper(float[,] newArray, float[,] oldArray, int iNew, int iOld, int secondN, float t)
     {
-        for (int j = 0; j < secondN; j++)
-        {
-            newArray[iNew, j] = Mathf.Lerp(oldArray[iOld, j], oldArray[iOld + 1, j], t);
-        }
+        for (int j = 0; j < secondN; j++) newArray[iNew, j] = Mathf.Lerp(oldArray[iOld, j], oldArray[iOld + 1, j], t);
     }
 
     // Warp the initialize data to a new length through piecwise interpolation
@@ -385,7 +382,7 @@ public class BaseSimulator : MonoBehaviour
         warpDataCopyHelper(cathEnd, data.cathEnd                , newSize - 1, oldSize - 1, 3);
 
         // Interpolate the new points inbetween the first and last point
-        float stride = (float) oldSize / (float) newSize;
+        float stride = (float) (oldSize - 1) / (float) (newSize - 1); // Subtract by 1 because of 0 indexing
         float growthFactor = newSize / oldSize;
         float currentStep = stride;
         for (int i = 0; i < newSize - 1; i++)
@@ -393,6 +390,8 @@ public class BaseSimulator : MonoBehaviour
             // Find the closest smaller point in the original array and the offset from it to the currentStep
             int current = (int) currentStep;
             float offset = currentStep - (float) current;
+
+            //Debug.Log("i " + i + " Current " + current + " Current Step" + currentStep);
 
             // Create a point in the new array with values interpolated from the two closest points in the original array
             field[i]           = i;
