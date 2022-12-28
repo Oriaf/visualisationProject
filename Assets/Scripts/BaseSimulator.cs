@@ -43,6 +43,9 @@ public class BaseSimulator : MonoBehaviour
         public Quaternion cathCenterRot;
         public Quaternion skullCenterRot;
 
+        // The line renderer of the data
+        public LineRenderer lineRenderer;
+
         public Vector3 cathRight = Vector3.one;
         public Vector3 cathUp = Vector3.one;
 
@@ -68,6 +71,8 @@ public class BaseSimulator : MonoBehaviour
 
     [Header("Visualization")]
     public bool applyWarpData = true;
+    public bool applyPathTrace = true;
+    public int numberOfPoints;
 
     [Header("Simulation")]
     public string[] paths; //"Assets/Recordings/catheter005.txt"; // List of paths to be loaded
@@ -160,6 +165,36 @@ public class BaseSimulator : MonoBehaviour
         }
     }
 
+    protected void visualizePathTrace(Data data)
+    {
+        if(data.lineRenderer == null)
+        {
+            Debug.LogError("No Line Renderer assigned to the simulation script!\nNo motion trace visualized.");
+            return;
+        }
+
+        // Render half the points behind, and half the point ahead of the current index, or as far as possible if near the begining/end of the data
+        int numPastPoints = (data.index - (numberOfPoints / 2) >= 0) ? numberOfPoints / 2 : data.index;
+        int numFuturePoints = (data.index + (numberOfPoints / 2) < data.fileSize) ? numberOfPoints / 2 : data.fileSize - data.index; // Includes the current point
+        Debug.Log("# past points: " + numPastPoints + " # future points: " + numFuturePoints);
+        data.lineRenderer.positionCount = numPastPoints + numFuturePoints;
+
+        
+        Vector3[] points = new Vector3[data.lineRenderer.positionCount];
+        const float normalized = 1000.0f;
+        for(int i = 0; i < numPastPoints; i++)
+        {
+            int current = data.index - (numPastPoints - i);
+            points[i] = new Vector3(data.cathTip[current, 0] / normalized, data.cathTip[current, 1] / normalized, data.cathTip[current, 2] / normalized);
+        }
+        for (int i = 0; i < numFuturePoints; i++)
+        {
+            int current = data.index + i;
+            points[numPastPoints + i] = new Vector3(data.cathTip[current, 0] / normalized, data.cathTip[current, 1] / normalized, data.cathTip[current, 2] / normalized);
+        }
+        data.lineRenderer.SetPositions(points);
+    }
+
     // Simulate the data in specific data set. Should only be called after checking externaly that we have a new simulation frame and aren't paused!
     protected void simulateData(Data data)
     {
@@ -222,6 +257,7 @@ public class BaseSimulator : MonoBehaviour
             foreach (Data data in dataList)
             {
                 simulateData(data);
+                if(applyPathTrace) visualizePathTrace(data);
             }
 
             if (rewind && index > 0)
@@ -290,6 +326,8 @@ public class BaseSimulator : MonoBehaviour
                     data.cathCenter = child;
                     //initialize offset for 3dmodels
                     data.cathCenterRot = data.cathCenter.transform.rotation;
+
+                    data.lineRenderer = child.GetComponentInChildren<LineRenderer>();
                     break;
                 case "SkullCenter":
                     data.skullCenter = child;
