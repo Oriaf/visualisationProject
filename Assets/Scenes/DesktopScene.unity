@@ -1374,8 +1374,10 @@ MonoBehaviour:
   - {fileID: 1411628064}
   - {fileID: 1971000954}
   slider: {fileID: 2031703441}
+  applyWarpData: 0
   paths:
   - Assets/Recordings/catheter006.txt
+  - Assets/Recordings/catheter005.txt
   maxPlaybackSpeed: 150
   phantomSkull: {fileID: 2296330364526986364}
   phantomBrain: {fileID: 2296330364526986363}

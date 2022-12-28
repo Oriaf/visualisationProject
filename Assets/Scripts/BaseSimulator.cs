@@ -66,6 +66,9 @@ public class BaseSimulator : MonoBehaviour
     public Text[] FrameStuff;
     public Slider slider; //slider to control the animation speed
 
+    [Header("Visualization")]
+    public bool applyWarpData = true;
+
     [Header("Simulation")]
     public string[] paths; //"Assets/Recordings/catheter005.txt"; // List of paths to be loaded
     public float maxPlaybackSpeed = 50f;
@@ -73,6 +76,8 @@ public class BaseSimulator : MonoBehaviour
     protected float timeDelay = 1.0f; //the code will be run every 2 seconds
     protected const string separator = "\t"; //tab separation string
     protected int index = 0;
+    protected int maxFileSize = -1;
+    protected bool moreData;
     protected bool paused;
     protected bool rewind;
     protected bool forward;
@@ -130,6 +135,8 @@ public class BaseSimulator : MonoBehaviour
         {
             dataList.Add(extractData(path));
         }
+        maxFileSize = warpData(dataList);
+        moreData = true;
 
         init();
 
@@ -206,18 +213,37 @@ public class BaseSimulator : MonoBehaviour
         timer += Time.deltaTime;
 
         // If it's the next simulation frame, and we are not paused
-        if (timer >= timeToCall && !paused)
+        if (timer >= timeToCall && !paused && moreData)
         {
+            //Debug.Log("\t Index: " + dataList[1].index);
+            //Debug.Log("\t HeadTopLeft Last: (" + dataList[1].headTopLeft[dataList[1].index, 0] + ", " + dataList[1].headTopLeft[dataList[1].index, 1] + ", " + dataList[1].headTopLeft[dataList[1].index, 2] + ")");
+
             // Simulate each data series
             foreach (Data data in dataList)
             {
                 simulateData(data);
             }
 
+            if (rewind && index > 0)
+            {
+                index--;
+            }
+
+            if (forward)
+            {
+                index++;
+            }
+
             // Update the GUI
             if (FrameStuff[0])
             {
                 FrameStuff[0].text = "Current frame: " + index;
+            }
+
+            if (index >= maxFileSize)
+            {
+                moreData = false;
+                Invoke(nameof(RestartScene), 1f); // Soft restart the scene (method in this script)
             }
         }
     }
@@ -275,6 +301,134 @@ public class BaseSimulator : MonoBehaviour
                     break;
             }
         }
+    }
+
+    // Make sure that all data sets are of equal length
+    protected int warpData(List<Data> dataList)
+    {
+        // Find the data set with most data points
+        int maxSize = -1;
+        foreach(Data data in dataList)
+        {
+            //Debug.Log("Data size: " + data.fileSize);
+            maxSize = Math.Max(maxSize, data.fileSize);
+        }
+
+        // Check if we should warp the data for this visualization
+        if (!applyWarpData) return maxSize;
+
+        // Warp all data sets so they are of equal length
+        foreach(Data data in dataList)
+        {
+            if (data.fileSize != maxSize) warpData(data, maxSize);
+        }
+
+        return maxSize;
+    }
+
+    private void warpDataCopyHelper(float[,] newArray, float[,] oldArray, int iNew, int iOld, int secondN)
+    {
+        for (int j = 0; j < secondN; j++) newArray[iNew, j] = oldArray[iOld, j];
+    }
+
+    private void warpDataInterpolateHelper(float[,] newArray, float[,] oldArray, int iNew, int iOld, int secondN, float t)
+    {
+        for (int j = 0; j < secondN; j++)
+        {
+            newArray[iNew, j] = Mathf.Lerp(oldArray[iOld, j], oldArray[iOld + 1, j], t);
+        }
+    }
+
+    // Warp the initialize data to a new length through piecwise interpolation
+    protected void warpData(Data data, int newSize)
+    {
+        // Remember the original length
+        int oldSize = data.fileSize;
+
+        Debug.Log("Warping " + data.path + " of size " + oldSize + " to size " + newSize);
+        /*Debug.Log("\t Original HeadTopLeft Last: (" + data.headTopLeft[oldSize - 5, 0] + ", " + data.headTopLeft[oldSize - 5, 1] + ", " + data.headTopLeft[oldSize - 5, 2] + ")");
+        Debug.Log("\t Original HeadTopLeft 5: (" + data.headTopLeft[5, 0] + ", " + data.headTopLeft[5, 1] + ", " + data.headTopLeft[5, 2] + ")");*/
+
+        // Update to the new length
+        data.fileSize = newSize;
+
+        // Alocate new arrays
+        float[] field = new float[data.fileSize];
+        float[] time = new float[data.fileSize];
+        float[,] headTopLeft = new float[data.fileSize, 3];
+        float[,] headTopRight = new float[data.fileSize, 3];
+        float[,] headBottomLeft = new float[data.fileSize, 3];
+        float[,] headBottomRight = new float[data.fileSize, 3];
+        float[,] headHole = new float[data.fileSize, 3];
+        float[,] headBrow = new float[data.fileSize, 3];
+        float[,] cathTip = new float[data.fileSize, 3];
+        float[,] cathTopLeft = new float[data.fileSize, 3];
+        float[,] cathTopRight = new float[data.fileSize, 3];
+        float[,] cathBottomLeft = new float[data.fileSize, 3];
+        float[,] cathBottomRight = new float[data.fileSize, 3];
+        float[,] cathEnd = new float[data.fileSize, 3];
+
+        // The last point should be the same
+        field[newSize - 1] = data.field[oldSize - 1];        
+        time[newSize - 1] = data.time[oldSize - 1];
+        warpDataCopyHelper(headTopLeft, data.headTopLeft        , newSize - 1, oldSize - 1, 3);
+        warpDataCopyHelper(headTopRight, data.headTopRight      , newSize - 1, oldSize - 1, 3);
+        warpDataCopyHelper(headBottomLeft, data.headBottomLeft  , newSize - 1, oldSize - 1, 3);
+        warpDataCopyHelper(headBottomRight, data.headBottomRight, newSize - 1, oldSize - 1, 3);
+        warpDataCopyHelper(headHole, data.headHole              , newSize - 1, oldSize - 1, 3);
+        warpDataCopyHelper(headBrow, data.headBrow              , newSize - 1, oldSize - 1, 3);
+        warpDataCopyHelper(cathTip, data.cathTip                , newSize - 1, oldSize - 1, 3);
+        warpDataCopyHelper(cathTopLeft, data.cathTopLeft        , newSize - 1, oldSize - 1, 3);
+        warpDataCopyHelper(cathTopRight, data.cathTopRight      , newSize - 1, oldSize - 1, 3);
+        warpDataCopyHelper(cathBottomLeft, data.cathBottomLeft  , newSize - 1, oldSize - 1, 3);
+        warpDataCopyHelper(cathBottomRight, data.cathBottomRight, newSize - 1, oldSize - 1, 3);
+        warpDataCopyHelper(cathEnd, data.cathEnd                , newSize - 1, oldSize - 1, 3);
+
+        // Interpolate the new points inbetween the first and last point
+        float stride = (float) oldSize / (float) newSize;
+        float growthFactor = newSize / oldSize;
+        float currentStep = stride;
+        for (int i = 0; i < newSize - 1; i++)
+        {
+            // Find the closest smaller point in the original array and the offset from it to the currentStep
+            int current = (int) currentStep;
+            float offset = currentStep - (float) current;
+
+            // Create a point in the new array with values interpolated from the two closest points in the original array
+            field[i]           = i;
+            time[i]            = Mathf.Lerp(time[current], time[current + 1], offset);
+            warpDataInterpolateHelper(headTopLeft, data.headTopLeft        , i, current, 3, offset);
+            warpDataInterpolateHelper(headTopRight, data.headTopRight      , i, current, 3, offset);
+            warpDataInterpolateHelper(headBottomLeft, data.headBottomLeft  , i, current, 3, offset);
+            warpDataInterpolateHelper(headBottomRight, data.headBottomRight, i, current, 3, offset);
+            warpDataInterpolateHelper(headHole, data.headHole              , i, current, 3, offset);
+            warpDataInterpolateHelper(headBrow, data.headBrow              , i, current, 3, offset);
+            warpDataInterpolateHelper(cathTip, data.cathTip                , i, current, 3, offset);
+            warpDataInterpolateHelper(cathTopLeft, data.cathTopLeft        , i, current, 3, offset);
+            warpDataInterpolateHelper(cathTopRight, data.cathTopRight      , i, current, 3, offset);
+            warpDataInterpolateHelper(cathBottomLeft, data.cathBottomLeft  , i, current, 3, offset);
+            warpDataInterpolateHelper(cathBottomRight, data.cathBottomRight, i, current, 3, offset);
+            warpDataInterpolateHelper(cathEnd, data.cathEnd                , i, current, 3, offset);
+
+            currentStep = stride * (float) (i + 1);
+        }
+
+        //Debug.Log("\t HeadTopLeft 5: (" + headTopLeft[5, 0] + ", " + headTopLeft[5, 1] + ", " + headTopLeft[5, 2] + ")");
+
+        // Update data to use the new arrays
+        data.field           = field;
+        data.headTopLeft     = headTopLeft;
+        data.headTopRight    = headTopRight;
+        data.headBottomLeft  = headBottomLeft;
+        data.headBottomRight = headBottomRight;
+        data.headHole        = headHole;
+        data.headBrow        = headBrow;
+        data.cathTip         = cathTip;
+        data.cathTopLeft     = cathTopLeft;
+        data.cathTopRight    = cathTopRight;
+        data.cathBottomLeft  = cathBottomLeft;
+        data.cathBottomRight = cathBottomRight;
+        data.cathEnd         = cathEnd;
     }
 
     /*
@@ -403,11 +557,12 @@ public class BaseSimulator : MonoBehaviour
     //function to find the total number of lines in the file being read
     private int FindSize(StreamReader reader)
     {
-        int i = 1;
-        string line = reader.ReadLine();
-        while (line != null)
+        int i = 0;
+        string line = reader.ReadLine(); // Don't count the header line
+        while (!String.IsNullOrWhiteSpace(line))
         {
             i++;
+
             line = reader.ReadLine();
         }
         return i;
@@ -426,7 +581,7 @@ public class BaseSimulator : MonoBehaviour
         {
             string[] temp = line.Split(separator.ToCharArray());
             //string[] temp = line.Split("\t");
-            int runtimeField = Int32.Parse(temp[0]); //current array id
+            int runtimeField = Int32.Parse(temp[0]) - 1; //current array id
 
             //Debug.Log(runtimeField);
 
@@ -522,8 +677,11 @@ public class BaseSimulator : MonoBehaviour
             data.index = 0;
             data.moreData = true;
         }
+        index = 0;
 
         timer = 0;
+
+        moreData = true;
     }
 
     protected void ToggleTransparency()
