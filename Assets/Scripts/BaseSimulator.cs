@@ -7,11 +7,14 @@ using UnityEngine.UI;
 using JetBrains.Annotations;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEditor;
+
+using static VoxelGrid;
 
 /*
     Base script for running the simulation.
     Offers functionality for reading in data, animating the data and toggling the transparency of
-    the brain and skull. Adapted from the VRSimulator written by Marcus Holmberg, Måns Nyman, Léa Prémont
+    the brain and skull. Adapted from the VRSimulator written by Marcus Holmberg, Mï¿½ns Nyman, Lï¿½a Prï¿½mont
     and Mahmoud Sherzad.
 */
 public class BaseSimulator : MonoBehaviour
@@ -72,9 +75,17 @@ public class BaseSimulator : MonoBehaviour
     [Header("Visualization")]
     public bool applyWarpData = true;
     public bool applyPathTrace = true;
+    public bool applySpaceTimeDensity = false;
     public int numberOfPoints;
 
+    [Header("Space-Time Density")]
+    public int voxelsPerDim = 1000;
+    public float gridLength = 10.0f;
+    public float kernelSize = 1.0f;
+    private VoxelGrid voxelGrid;
+
     [Header("Simulation")]
+    public bool enableSimulation = true;
     public string[] paths; //"Assets/Recordings/catheter005.txt"; // List of paths to be loaded
     public float maxPlaybackSpeed = 50f;
     protected float timeToCall;
@@ -147,6 +158,11 @@ public class BaseSimulator : MonoBehaviour
 
         // Sets the skull and brain to have the solid material
         SetInitialColors();
+
+        if (applySpaceTimeDensity)
+        {
+            calculateSpaceTimeDensity(dataList);
+        }
     }
 
     protected virtual void handleInput()
@@ -165,6 +181,57 @@ public class BaseSimulator : MonoBehaviour
         }
     }
 
+    protected void calculateSpaceTimeDensity(List<Data> dataList)
+    {
+        Debug.Log("Calculating space time density");
+        
+        voxelGrid = new VoxelGrid(voxelsPerDim, gridLength); // Set all voxels in the result to have 0 density
+        foreach (Data data in dataList)
+        {
+            //Debug.Log("Working on data " + data.path);
+            VoxelGrid trajectoryDensity = new VoxelGrid(voxelsPerDim, gridLength); // Create a temporary grid with all densities initialized to 0
+            //calculateKernelArea(data); // Calculate a prism for each line segment so that the line sigment lies on the main diagonal, but he borders are at least kernelSize away from the line
+            // Only voxels inside of the kernel area should be considered; all others have a trajectoryDensity of 0
+            //foreach(voxel in kernelArea)
+            for(int x = 0; x < voxelsPerDim; x++)
+            {
+                for (int y = 0; y < voxelsPerDim; y++)
+                {
+                    for (int z = 0; z < voxelsPerDim; z++)
+                    {
+                        Voxel voxel = trajectoryDensity.voxels[x, y, z];
+                        
+                         /*
+                          * For each line segment between P_n and P_{n+1}:
+                          *      distanceLineSegment[n] = min(dist(voxel, P_n), dist(voxel, P_{n+1}), dist(voxel, infiniteLine))
+                          * distranceToTrajectory = min(distanceLineSegment)
+                          */
+                         float distanceToTrajectory = float.MaxValue;
+                         for (int i = 0; i < data.fileSize - 1; i++)
+                         {
+                             // Calculate the distance between the voxel center and the closest point on the line segment
+                             Vector3 a = new Vector3(data.cathTip[i, 0], data.cathTip[i, 1], data.cathTip[i, 2]);
+                             Vector3 b = new Vector3(data.cathTip[i + 1, 0], data.cathTip[i + 1, 1], data.cathTip[i + 1, 2]);
+                             float distanceLineSegment = HandleUtility.DistancePointLine(voxel.position, a, b);
+                             
+                             // Check if this a closer point than what was previously known
+                             if (distanceLineSegment < distanceToTrajectory) distanceToTrajectory = distanceLineSegment;
+                         }
+                         
+                         // Linear normalisation of the density so 1 for voxels on the trajectory, and 0 at the kernel size
+                         voxel.setLinearDensity(distanceToTrajectory, kernelSize);
+                    }
+                }
+            }
+            voxelGrid.add(trajectoryDensity); // Add the density of each voxel to the total result
+        }
+
+        voxelGrid.normalizeDensities(dataList.Count); // Normalize by the number of trajectories to get values between 0 and 1
+        //Debug.Log("About to print grid!");
+        //voxelGrid.print();
+        Debug.Log("Done calculating the space time density!");
+    }
+
     protected void visualizePathTrace(Data data)
     {
         if(data.lineRenderer == null)
@@ -176,7 +243,7 @@ public class BaseSimulator : MonoBehaviour
         // Render half the points behind, and half the point ahead of the current index, or as far as possible if near the begining/end of the data
         int numPastPoints = (data.index - (numberOfPoints / 2) >= 0) ? numberOfPoints / 2 : data.index;
         int numFuturePoints = (data.index + (numberOfPoints / 2) < data.fileSize) ? numberOfPoints / 2 : data.fileSize - data.index; // Includes the current point
-        Debug.Log("# past points: " + numPastPoints + " # future points: " + numFuturePoints);
+        //Debug.Log("# past points: " + numPastPoints + " # future points: " + numFuturePoints);
         data.lineRenderer.positionCount = numPastPoints + numFuturePoints;
 
         
@@ -246,9 +313,9 @@ public class BaseSimulator : MonoBehaviour
     void FixedUpdate()
     {
         timer += Time.deltaTime;
-
+        
         // If it's the next simulation frame, and we are not paused
-        if (timer >= timeToCall && !paused && moreData)
+        if (timer >= timeToCall && !paused && moreData && enableSimulation)
         {
             //Debug.Log("\t Index: " + dataList[1].index);
             //Debug.Log("\t HeadTopLeft Last: (" + dataList[1].headTopLeft[dataList[1].index, 0] + ", " + dataList[1].headTopLeft[dataList[1].index, 1] + ", " + dataList[1].headTopLeft[dataList[1].index, 2] + ")");
