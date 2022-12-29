@@ -8,6 +8,7 @@ using JetBrains.Annotations;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEditor;
+using UnityVolumeRendering;
 
 using static VoxelGrid;
 
@@ -77,6 +78,7 @@ public class BaseSimulator : MonoBehaviour
     public bool applyPathTrace = true;
     public bool applySpaceTimeDensity = false;
     public int numberOfPoints;
+    public float normalizationFactor = 1000.0f;
 
     [Header("Space-Time Density")]
     public int voxelsPerDim = 1000;
@@ -162,6 +164,7 @@ public class BaseSimulator : MonoBehaviour
         if (applySpaceTimeDensity)
         {
             calculateSpaceTimeDensity(dataList);
+            visualizeDensity();
         }
     }
 
@@ -210,9 +213,11 @@ public class BaseSimulator : MonoBehaviour
                          for (int i = 0; i < data.fileSize - 1; i++)
                          {
                              // Calculate the distance between the voxel center and the closest point on the line segment
-                             Vector3 a = new Vector3(data.cathTip[i, 0], data.cathTip[i, 1], data.cathTip[i, 2]);
-                             Vector3 b = new Vector3(data.cathTip[i + 1, 0], data.cathTip[i + 1, 1], data.cathTip[i + 1, 2]);
+                             float center = gridLength / 2.0f; // We the origin of the data to be at the center of our cube
+                             Vector3 a = new Vector3(data.cathTip[i, 0] + center, data.cathTip[i, 1] + center, data.cathTip[i, 2] + center);
+                             Vector3 b = new Vector3(data.cathTip[i + 1, 0] + center, data.cathTip[i + 1, 1] + center, data.cathTip[i + 1, 2] + center);
                              float distanceLineSegment = HandleUtility.DistancePointLine(voxel.position, a, b);
+                             //Debug.Log(distanceLineSegment);
                              
                              // Check if this a closer point than what was previously known
                              if (distanceLineSegment < distanceToTrajectory) distanceToTrajectory = distanceLineSegment;
@@ -232,6 +237,51 @@ public class BaseSimulator : MonoBehaviour
         Debug.Log("Done calculating the space time density!");
     }
 
+    protected void visualizeDensity()
+    {
+        // Convert our result to the format expected by Matias Lavik's Volume Rendering Code
+        VolumeDataset dataset = new VolumeDataset();
+        
+        dataset.datasetName = "motiondata";
+        //dataset.filePath = filePath;
+        
+        dataset.dimX = voxelsPerDim;
+        dataset.dimY = voxelsPerDim;
+        dataset.dimZ = voxelsPerDim;
+        int uDimension = voxelsPerDim * voxelsPerDim * voxelsPerDim;
+        dataset.data = new float[uDimension];
+
+        // Copy the data
+        for (int x = 0; x < voxelsPerDim; x++)
+        {
+            for (int y = 0; y < voxelsPerDim; y++)
+            {
+                for (int z = 0; z < voxelsPerDim; z++)
+                {
+                    /*
+                     * Based on the code for creating a texture for the data set the one dimensional array
+                     * stores data so that idx = x + y * dimX + z * (dimX * dimY)
+                     */
+                    int idx = x + y * voxelsPerDim + z * (voxelsPerDim * voxelsPerDim);
+                    dataset.data[idx] = voxelGrid.voxels[x, y, z].density;
+                }
+            }
+        }
+        Debug.Log("Loaded dataset in range: " + dataset.GetMinDataValue() + "  -  " + dataset.GetMaxDataValue());
+        
+        dataset.FixDimensions();
+        
+        // Spawn the object
+        if (dataset != null)
+        {
+            VolumeObjectFactory.CreateObject(dataset);
+
+            // Rotate the visualization object back to the default rotation (it is rotated 90 degrees for some reason)
+            GameObject obj = GameObject.Find("VolumeRenderedObject_" + dataset.datasetName);
+            obj.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
+        }
+    }
+
     protected void visualizePathTrace(Data data)
     {
         if(data.lineRenderer == null)
@@ -248,16 +298,15 @@ public class BaseSimulator : MonoBehaviour
 
         
         Vector3[] points = new Vector3[data.lineRenderer.positionCount];
-        const float normalized = 1000.0f;
         for(int i = 0; i < numPastPoints; i++)
         {
             int current = data.index - (numPastPoints - i);
-            points[i] = new Vector3(data.cathTip[current, 0] / normalized, data.cathTip[current, 1] / normalized, data.cathTip[current, 2] / normalized);
+            points[i] = new Vector3(data.cathTip[current, 0], data.cathTip[current, 1], data.cathTip[current, 2]);
         }
         for (int i = 0; i < numFuturePoints; i++)
         {
             int current = data.index + i;
-            points[numPastPoints + i] = new Vector3(data.cathTip[current, 0] / normalized, data.cathTip[current, 1] / normalized, data.cathTip[current, 2] / normalized);
+            points[numPastPoints + i] = new Vector3(data.cathTip[current, 0], data.cathTip[current, 1], data.cathTip[current, 2]);
         }
         data.lineRenderer.SetPositions(points);
     }
@@ -582,6 +631,25 @@ public class BaseSimulator : MonoBehaviour
         //set offset of skull depending on recording
         data.skullCenter.gameObject.transform.GetChild(0).transform.localPosition = skullOffsetPos[path];
         data.skullCenter.gameObject.transform.GetChild(0).transform.localEulerAngles = skullOffsetRot[path];
+        
+        // Normalize the data
+        for (int i = 0; i < data.fileSize; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                 data.cathTip[i, j] = data.cathTip[i, j] / normalizationFactor;
+                 data.cathTopLeft[i, j] = data.cathTopLeft[i, j] / normalizationFactor;
+                 data.cathTopRight[i, j] = data.cathTopRight[i, j] / normalizationFactor;
+                 data.cathBottomLeft[i, j] = data.cathBottomLeft[i, j] / normalizationFactor;
+                 data.cathBottomRight[i, j] = data.cathBottomRight[i, j] / normalizationFactor;
+                 data.headTopLeft[i, j] = data.headTopLeft[i, j] / normalizationFactor;
+                 data.headTopRight[i, j] = data.headTopRight[i, j] / normalizationFactor;
+                 data.headBottomLeft[i, j] = data.headBottomLeft[i, j] / normalizationFactor;
+                 data.headBottomRight[i, j] = data.headBottomRight[i, j] / normalizationFactor;
+                 data.headBrow[i, j] = data.headBrow[i, j] / normalizationFactor;
+                
+            }
+        }
 
         return data;
     }
@@ -605,40 +673,40 @@ public class BaseSimulator : MonoBehaviour
         int index = data.index;
 
         //x coordinate
-        data.x1 = data.cathTip[index, 0] / 1000.0f;
-        data.x2 = data.cathTopLeft[index, 0] / 1000.0f;
-        data.x3 = data.cathTopRight[index, 0] / 1000.0f;
-        data.x4 = data.cathBottomLeft[index, 0] / 1000.0f;
-        data.x5 = data.cathBottomRight[index, 0] / 1000.0f;
-        data.x6 = data.headTopLeft[index, 0] / 1000.0f;
-        data.x7 = data.headTopRight[index, 0] / 1000.0f;
-        data.x8 = data.headBottomLeft[index, 0] / 1000.0f;
-        data.x9 = data.headBottomRight[index, 0] / 1000.0f;
-        data.x10 = data.headBrow[index, 0] / 1000.0f;
+        data.x1 = data.cathTip[index, 0];     // / 1000.0f;
+        data.x2 = data.cathTopLeft[index, 0]; /// 1000.0f;
+        data.x3 = data.cathTopRight[index, 0]; // / 1000.0f;
+        data.x4 = data.cathBottomLeft[index, 0]; // / 1000.0f;
+        data.x5 = data.cathBottomRight[index, 0]; // / 1000.0f;
+        data.x6 = data.headTopLeft[index, 0]; // / 1000.0f;
+        data.x7 = data.headTopRight[index, 0]; // / 1000.0f;
+        data.x8 = data.headBottomLeft[index, 0]; // / 1000.0f;
+        data.x9 = data.headBottomRight[index, 0]; // / 1000.0f;
+        data.x10 = data.headBrow[index, 0]; // / 1000.0f;
 
         //y coordinate
-        data.y1 = data.cathTip[index, 1] / 1000.0f;
-        data.y2 = data.cathTopLeft[index, 1] / 1000.0f;
-        data.y3 = data.cathTopRight[index, 1] / 1000.0f;
-        data.y4 = data.cathBottomLeft[index, 1] / 1000.0f;
-        data.y5 = data.cathBottomRight[index, 1] / 1000.0f;
-        data.y6 = data.headTopLeft[index, 1] / 1000.0f;
-        data.y7 = data.headTopRight[index, 1] / 1000.0f;
-        data.y8 = data.headBottomLeft[index, 1] / 1000.0f;
-        data.y9 = data.headBottomRight[index, 1] / 1000.0f;
-        data.y10 = data.headBrow[index, 1] / 1000.0f;
+        data.y1 = data.cathTip[index, 1]; // / 1000.0f;
+        data.y2 = data.cathTopLeft[index, 1]; // / 1000.0f;
+        data.y3 = data.cathTopRight[index, 1]; // / 1000.0f;
+        data.y4 = data.cathBottomLeft[index, 1]; // / 1000.0f;
+        data.y5 = data.cathBottomRight[index, 1]; // / 1000.0f;
+        data.y6 = data.headTopLeft[index, 1]; // / 1000.0f;
+        data.y7 = data.headTopRight[index, 1]; // / 1000.0f;
+        data.y8 = data.headBottomLeft[index, 1]; // / 1000.0f;
+        data.y9 = data.headBottomRight[index, 1]; // / 1000.0f;
+        data.y10 = data.headBrow[index, 1]; // / 1000.0f;
 
         //z coordinate
-        data.z1 = data.cathTip[index, 2] / 1000.0f;
-        data.z2 = data.cathTopLeft[index, 2] / 1000.0f;
-        data.z3 = data.cathTopRight[index, 2] / 1000.0f;
-        data.z4 = data.cathBottomLeft[index, 2] / 1000.0f;
-        data.z5 = data.cathBottomRight[index, 2] / 1000.0f;
-        data.z6 = data.headTopLeft[index, 2] / 1000.0f;
-        data.z7 = data.headTopRight[index, 2] / 1000.0f;
-        data.z8 = data.headBottomLeft[index, 2] / 1000.0f;
-        data.z9 = data.headBottomRight[index, 2] / 1000.0f;
-        data.z10 = data.headBrow[index, 2] / 1000.0f;
+        data.z1 = data.cathTip[index, 2]; // / 1000.0f;
+        data.z2 = data.cathTopLeft[index, 2]; // / 1000.0f;
+        data.z3 = data.cathTopRight[index, 2]; // / 1000.0f;
+        data.z4 = data.cathBottomLeft[index, 2]; // / 1000.0f;
+        data.z5 = data.cathBottomRight[index, 2]; // / 1000.0f;
+        data.z6 = data.headTopLeft[index, 2]; // / 1000.0f;
+        data.z7 = data.headTopRight[index, 2]; // / 1000.0f;
+        data.z8 = data.headBottomLeft[index, 2]; // / 1000.0f;
+        data.z9 = data.headBottomRight[index, 2]; // / 1000.0f;
+        data.z10 = data.headBrow[index, 2]; // / 1000.0f;
     }
 
     //function to check if objects assigned to markers are not null
