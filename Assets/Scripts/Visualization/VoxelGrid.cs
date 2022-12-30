@@ -78,6 +78,20 @@ public class VoxelGrid
         }
     }
 
+    public void setDensities(int d)
+    {
+        for (int x = 0; x < numPerDim; x++)
+        {
+            for (int y = 0; y < numPerDim; y++)
+            {
+                for (int z = 0; z < numPerDim; z++)
+                {
+                    voxels[x, y, z].density = d;
+                }
+            }
+        }
+    }
+
     public void print()
     {
         for (int x = 0; x < numPerDim; x++)

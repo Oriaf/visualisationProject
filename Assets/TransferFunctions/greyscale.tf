@@ -1,0 +1,1 @@
+{"version":1,"colourPoints":[{"dataValue":0.0,"colourValue":{"r":0.1764705926179886,"g":0.1764705926179886,"b":0.1764705926179886,"a":1.0}}],"alphaPoints":[]}

@@ -1,0 +1,18 @@
+This asset is governed by the Asset Store EULA; however, the following components are governed by the licenses indicated below:
+A. openDICOM.net
+LGPL Version 2.1.
+Copyright (C) 2006-2007  Albert Gnandt
+See full LGPL license in subfolder: Assets/3rdparty/openDicom/LGPL
+
+B: VisMale.raw (Visible Human Project)
+UNNAMED LICENSE.
+Courtesy of the U.S. National Library of Medicine
+Disclaimer: This version of the Visible Human Dataset does not reflect the most current/accurate data available from NLM.
+See full license in subfolder  DataFiles/VisMale-license.txt
+
+C. SimpleITK
+Apache License 2.0
+Copyright 2010-2019 Insight Software Consortium
+Copyright 2020 NumFOCUS
+This library is automatically downloaded when requested by user.
+See full license in subfolder: Assets/3rdparty/SimpleITK-[VERSION]/LICENSE
