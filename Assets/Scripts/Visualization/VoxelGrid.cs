@@ -21,6 +21,7 @@ public class VoxelGrid
 
     public int numPerDim; // The number of voxel per dimension in the grid
     public float lengthPerDim; // Length of the grid in each dimension
+	public float voxelLength; // Length of each side of the voxel
     public Voxel[,,] voxels;
 
     public VoxelGrid(int nPerDim, float lPerDim)
@@ -30,7 +31,7 @@ public class VoxelGrid
 
         // Initialize the voxel grid and voxels
         voxels = new Voxel[numPerDim, numPerDim, numPerDim];
-        float voxelLength = lPerDim / (float) nPerDim;
+        voxelLength = lPerDim / (float) nPerDim;
         for (int x = 0; x < numPerDim; x++)
         {
             for (int y = 0; y < numPerDim; y++)
@@ -43,6 +44,14 @@ public class VoxelGrid
             }
         }
     }
+
+	public Vector3Int getVoxelIndexAtPosition(Vector3 pos){
+		int x = (int) Mathf.Ceil(pos.x / voxelLength) - 1;	
+		int y = (int) Mathf.Ceil(pos.y / voxelLength) - 1;	
+		int z = (int) Mathf.Ceil(pos.z / voxelLength) - 1;	
+
+		return new Vector3Int(x, y, z);
+	}
 
     public void add(VoxelGrid B)
     {

@@ -80,8 +80,10 @@ public class BaseSimulator : MonoBehaviour
     public bool applySpaceTimeDensity = false;
     public int numberOfPoints;
     public float normalizationFactor = 1000.0f;
+    public string transferFunction = "Assets/TransferFunctions/greyscale.tf";
 
     [Header("Space-Time Density")]
+    public bool loadFromFile = true; // Whether to load the density from a precalculated file or recalculate it (and store to file)
     public int voxelsPerDim = 1000;
     public float gridLength = 10.0f;
     public float kernelSize = 1.0f;
@@ -226,106 +228,7 @@ public class BaseSimulator : MonoBehaviour
         // Pre-run the simulation and sample the position of the tip at each index
         for (int i = 0; i < data.fileSize; i++)
         {
-            /*
-            //normalize positions
-            int index = data.index;
-
-            //x coordinate
-            data.x1 = data.cathTip[index, 0];     // / 1000.0f;
-            data.x2 = data.cathTopLeft[index, 0]; /// 1000.0f;
-            data.x3 = data.cathTopRight[index, 0]; // / 1000.0f;
-            data.x4 = data.cathBottomLeft[index, 0]; // / 1000.0f;
-            data.x5 = data.cathBottomRight[index, 0]; // / 1000.0f;
-            data.x6 = data.headTopLeft[index, 0]; // / 1000.0f;
-            data.x7 = data.headTopRight[index, 0]; // / 1000.0f;
-            data.x8 = data.headBottomLeft[index, 0]; // / 1000.0f;
-            data.x9 = data.headBottomRight[index, 0]; // / 1000.0f;
-            data.x10 = data.headBrow[index, 0]; // / 1000.0f;
-
-            //y coordinate
-            data.y1 = data.cathTip[index, 1]; // / 1000.0f;
-            data.y2 = data.cathTopLeft[index, 1]; // / 1000.0f;
-            data.y3 = data.cathTopRight[index, 1]; // / 1000.0f;
-            data.y4 = data.cathBottomLeft[index, 1]; // / 1000.0f;
-            data.y5 = data.cathBottomRight[index, 1]; // / 1000.0f;
-            data.y6 = data.headTopLeft[index, 1]; // / 1000.0f;
-            data.y7 = data.headTopRight[index, 1]; // / 1000.0f;
-            data.y8 = data.headBottomLeft[index, 1]; // / 1000.0f;
-            data.y9 = data.headBottomRight[index, 1]; // / 1000.0f;
-            data.y10 = data.headBrow[index, 1]; // / 1000.0f;
-
-            //z coordinate
-            data.z1 = data.cathTip[index, 2]; // / 1000.0f;
-            data.z2 = data.cathTopLeft[index, 2]; // / 1000.0f;
-            data.z3 = data.cathTopRight[index, 2]; // / 1000.0f;
-            data.z4 = data.cathBottomLeft[index, 2]; // / 1000.0f;
-            data.z5 = data.cathBottomRight[index, 2]; // / 1000.0f;
-            data.z6 = data.headTopLeft[index, 2]; // / 1000.0f;
-            data.z7 = data.headTopRight[index, 2]; // / 1000.0f;
-            data.z8 = data.headBottomLeft[index, 2]; // / 1000.0f;
-            data.z9 = data.headBottomRight[index, 2]; // / 1000.0f;
-            data.z10 = data.headBrow[index, 2]; // / 1000.0f;
-
-            //update marker positions
-            data.cathTop.transform.position = new Vector3(data.x1, data.y1, data.z1);
-            data.cathTL.transform.position = new Vector3(data.x2, data.y2, data.z2);
-            data.cathTR.transform.position = new Vector3(data.x3, data.y3, data.z3);
-            data.cathBL.transform.position = new Vector3(data.x4, data.y4, data.z4);
-            data.cathBR.transform.position = new Vector3(data.x5, data.y5, data.z5);
-            data.skullTL.transform.position = new Vector3(data.x6, data.y6, data.z6);
-            data.skullTR.transform.position = new Vector3(data.x7, data.y7, data.z7);
-            data.skullBL.transform.position = new Vector3(data.x8, data.y8, data.z8);
-            data.skullBR.transform.position = new Vector3(data.x9, data.y9, data.z9);
-            data.skullBrow.transform.position = new Vector3(data.x10, data.y10, data.z10);
-
-            //Align orientation of the catheter
-            data.cathRight = data.cathTL.transform.position - data.cathTR.transform.position;
-            data.cathUp = data.cathTR.transform.position - data.cathBR.transform.position - Vector3.Project(data.cathTR.transform.position - data.cathBR.transform.position, data.cathRight);
-            data.cathCenter.transform.rotation = Quaternion.LookRotation(data.cathRight, data.cathUp);
-            //Align positions at the barycenter
-            data.cathCenter.transform.position = new Vector3((data.x1 + data.x2 + data.x3 + data.x4 + data.x5) / 5.0f, (data.y1 + data.y2 + data.y3 + data.y4 + data.y5) / 5.0f, (data.z1 + data.z2 + data.z3 + data.z4 + data.z5) / 5.0f);
-            data.skullCenter.transform.position = new Vector3((data.x6 + data.x7 + data.x8 + data.x9 + data.x10) / 5.0f, (data.y6 + data.y7 + data.y8 + data.y9 + data.y10) / 5.0f, (data.z6 + data.z7 + data.z8 + data.z9 + data.z10) / 5.0f);
-            */
-
-            int index = i;
-            
-            //x coordinate
-            float x1 = data.cathTip[index, 0];     // / 1000.0f;
-            float x2 = data.cathTopLeft[index, 0]; /// 1000.0f;
-            float x3 = data.cathTopRight[index, 0]; // / 1000.0f;
-            float x4 = data.cathBottomLeft[index, 0]; // / 1000.0f;
-            float x5 = data.cathBottomRight[index, 0]; // / 1000.0f;
-
-            //y coordinate
-            float y1 = data.cathTip[index, 1]; // / 1000.0f;
-            float y2 = data.cathTopLeft[index, 1]; // / 1000.0f;
-            float y3 = data.cathTopRight[index, 1]; // / 1000.0f;
-            float y4 = data.cathBottomLeft[index, 1]; // / 1000.0f;
-            float y5 = data.cathBottomRight[index, 1]; // / 1000.0f;
-
-            //z coordinate
-            float z1 = data.cathTip[index, 2]; // / 1000.0f;
-            float z2 = data.cathTopLeft[index, 2]; // / 1000.0f;
-            float z3 = data.cathTopRight[index, 2]; // / 1000.0f;
-            float z4 = data.cathBottomLeft[index, 2]; // / 1000.0f;
-            float z5 = data.cathBottomRight[index, 2]; // / 1000.0f;
-
-            Vector3 cathTopLeft = new Vector3(x2, y2, z2);
-            Vector3 cathTopRight = new Vector3(x3, y3, z3);
-            Vector3 cathBottomRight = new Vector3(x5, y5, z5);
-            
-            Vector3 cathCenter = new Vector3((x1 + x2 + x3 + x4 + x5) / 5.0f, (y1 + y2 + y3 + y4 + y5) / 5.0f, (z1 + z2 + z3 + z4 + z5) / 5.0f);
-            
-            
-            Vector3 cathRight = cathTopLeft - cathTopRight;
-            Vector3 cathUp = cathTopRight - cathBottomRight - Vector3.Project(cathTopRight - cathBottomRight, cathRight);
-            Quaternion cathCenterRotation = Quaternion.LookRotation(cathRight, cathUp);
-            
             // Record the tip's position
-            /*Vector3 tipPos = new Vector3(cathCenter.x, cathCenter.y - 0.20008f, cathCenter.z);
-            data.modelTip[i] = cathCenterRotation * tipPos; 
-            Debug.Log(i + ": " + data.modelTip[i]);
-            Debug.Log("\t" + cathCenter);*/
             data.modelTip[i] = (new Vector3(data.cathTip[i, 0] - min, data.cathTip[i, 1] - min, data.cathTip[i, 2] - min)) / range;
             //data.modelTip[i] = new Vector3(data.cathTip[i, 0], data.cathTip[i, 1], data.cathTip[i, 2]);
             //Debug.Log(i + ": " + data.modelTip[i]);
@@ -336,56 +239,6 @@ public class BaseSimulator : MonoBehaviour
     protected void calculateSpaceTimeDensity(List<Data> dataList)
     {
         Debug.Log("Calculating space time density");
-
-        /*dataList.Clear();
-
-        Data dat = new Data();
-        dat.fileSize = 11;
-        dat.cathTip = new float[dat.fileSize, 3];
-        for (int i = 0; i < dat.fileSize; i++)
-        {
-            dat.cathTip[i, 0] = 0.5f;
-            dat.cathTip[i, 1] = (1.0f / 11.0f) * (float) i;
-            if (i <= dat.fileSize / 2) dat.cathTip[i, 2] = (0.5f / 5.5f) * (float) i;
-            else dat.cathTip[i, 2] = (0.5f / 5.5f) * (float) (dat.fileSize - 1 - i);
-        }
-        dataList.Add(dat);
-        
-        dat = new Data();
-        dat.fileSize = 11;
-        dat.cathTip = new float[dat.fileSize, 3];
-        for (int i = 0; i < dat.fileSize; i++)
-        {
-            dat.cathTip[i, 0] = 0.5f;
-            dat.cathTip[i, 1] = (1.0f / 11.0f) * (float) i;
-            if (i <= dat.fileSize / 2) dat.cathTip[i, 2] = 1.0f - (0.5f / 5.5f) * (float) i;
-            else dat.cathTip[i, 2] = 1.0f - (0.5f / 5.5f) * (float) (dat.fileSize - 1 - i);
-        }
-        dataList.Add(dat);
-        
-        dat = new Data();
-        dat.fileSize = 11;
-        dat.cathTip = new float[dat.fileSize, 3];
-        for (int i = 0; i < dat.fileSize; i++)
-        {
-            dat.cathTip[i, 2] = 0.5f;
-            dat.cathTip[i, 1] = (1.0f / 11.0f) * (float) i;
-            if (i <= dat.fileSize / 2) dat.cathTip[i, 0] = (0.5f / 5.5f) * (float) i;
-            else dat.cathTip[i, 0] = (0.5f / 5.5f) * (float) (dat.fileSize - 1 - i);
-        }
-        dataList.Add(dat);
-        
-        dat = new Data();
-        dat.fileSize = 11;
-        dat.cathTip = new float[dat.fileSize, 3];
-        for (int i = 0; i < dat.fileSize; i++)
-        {
-            dat.cathTip[i, 2] = 0.5f;
-            dat.cathTip[i, 1] = (1.0f / 11.0f) * (float) i;
-            if (i <= dat.fileSize / 2) dat.cathTip[i, 0] = 1.0f - (0.5f / 5.5f) * (float) i;
-            else dat.cathTip[i, 0] = 1.0f - (0.5f / 5.5f) * (float) (dat.fileSize - 1 - i);
-        }
-        dataList.Add(dat);*/
         
         voxelGrid = new VoxelGrid(voxelsPerDim, gridLength); // Set all voxels in the result to have 0 density
         VoxelGrid trajectoryDensity = new VoxelGrid(voxelsPerDim, gridLength); // Create a temporary grid with all densities initialized to 0
@@ -393,52 +246,79 @@ public class BaseSimulator : MonoBehaviour
         foreach (Data data in dataList)
         {
             trajectoryDensity.setDensities(0);
-            //Debug.Log("Working on data " + data.path);
-            //calculateKernelArea(data); // Calculate a prism for each line segment so that the line sigment lies on the main diagonal, but he borders are at least kernelSize away from the line
-            // Only voxels inside of the kernel area should be considered; all others have a trajectoryDensity of 0
-            //foreach(voxel in kernelArea)
             
-            for(int x = 0; x < voxelsPerDim; x++)
+            /*
+             * Calculate the kernel area
+             * 
+             * For each line segment:
+             *      Find Voxel Va so that a is in Va
+             *      Find Voxel Vb so that b is in Vb
+             *
+             *      Find the two voxels with lowest and highest index which the kernel size falls within:
+             *          l = ceil(KernelSize / CellSize)
+             *          minX = min(Va.x, Vb.x) - l
+             *          ...
+             *          minZ = min(Va.z, Vb.z) - l
+             *          maxX = max(Va.z, Vb.z) + l
+             *          ...
+             *          maxZ = max(Va.z, Vb.z) + l
+             *
+             *      Add all voxels wich index falls within the min and max value of each dimension to a list
+             *      This is the kernel area of the line segment
+             */
+            Dictionary<int, Voxel> kernelArea = new Dictionary<int, Voxel>();
+            //List<Voxel>[] kernelSegment = new List<Voxel>[data.fileSize - 1];
+            for (int i = 0; i < data.fileSize - 1; i++)
             {
-                for (int y = 0; y < voxelsPerDim; y++)
-                {
-                    for (int z = 0; z < voxelsPerDim; z++)
-                    {
-                        Voxel voxel = trajectoryDensity.voxels[x, y, z];
-                        
-                         /*
-                          * For each line segment between P_n and P_{n+1}:
-                          *      distanceLineSegment[n] = min(dist(voxel, P_n), dist(voxel, P_{n+1}), dist(voxel, infiniteLine))
-                          * distranceToTrajectory = min(distanceLineSegment)
-                          */
-                         float distanceToTrajectory = float.MaxValue;
-                         //Vector3 a = new Vector3();
-                         //Vector3 b = new Vector3();
-                         for (int i = 0; i < data.fileSize - 1; i++)
-                         {
-                             // Calculate the distance between the voxel center and the closest point on the line segment
-                             //Vector3 a = new Vector3(data.cathTip[i, 0] + center, data.cathTip[i, 1] + center, data.cathTip[i, 2] + center);
-                             /*a.x = data.cathTip[i, 0];
-                             a.y = data.cathTip[i, 1];
-                             a.z = data.cathTip[i, 2];
-                             //Vector3 b = new Vector3(data.cathTip[i + 1, 0] + center, data.cathTip[i + 1, 1] + center, data.cathTip[i + 1, 2] + center);
-                             b.x = data.cathTip[i + 1, 0];
-                             b.y = data.cathTip[i + 1, 1];
-                             b.z = data.cathTip[i + 1, 2];
-                             Debug.Log(a + " " + b);*/
+                Vector3Int va = trajectoryDensity.getVoxelIndexAtPosition(data.modelTip[i]);
+                Vector3Int vb = trajectoryDensity.getVoxelIndexAtPosition(data.modelTip[i + 1]);
 
-                             //float distanceLineSegment = HandleUtility.DistancePointLine(voxel.position, a, b); // Extremly time intensive
-                             float distanceLineSegment = HandleUtility.DistancePointLine(voxel.position, data.modelTip[i], data.modelTip[i + 1]); // Extremly time intensive
-                             //Debug.Log(distanceLineSegment);
-                             
-                             // Check if this a closer point than what was previously known
-                             if (distanceLineSegment < distanceToTrajectory) distanceToTrajectory = distanceLineSegment;
-                         }
-                         
-                         // Linear normalisation of the density so 1 for voxels on the trajectory, and 0 at the kernel size
-                         voxel.setLinearDensity(distanceToTrajectory, kernelSize);
+                int l = (int) Mathf.Ceil(kernelSize / trajectoryDensity.voxelLength);
+                Vector3Int min = Vector3Int.Min(va, vb) - Vector3Int.one;
+                Vector3Int max = Vector3Int.Max(va, vb) + Vector3Int.one;
+
+                for (int x = min.x; x <= max.x; x++)
+                {
+                    if (x < 0 || x >= voxelsPerDim) continue;
+                    for (int y = min.y; y <= max.y; y++)
+                    {
+                        if (y < 0 || y >= voxelsPerDim) continue;
+                        for (int z = min.z; z <= max.z; z++)
+                        {
+                            if (z < 0 || z >= voxelsPerDim) continue;
+                            //kernelSegment[i].Add(trajectoryDensity.voxels[x, y, z]);
+
+                            int idx = x + y * voxelsPerDim + z * voxelsPerDim * voxelsPerDim;
+                            if (!kernelArea.ContainsKey(idx)) kernelArea.Add(idx, trajectoryDensity.voxels[x, y, z]);
+                        }
                     }
                 }
+            }
+
+            // For each voxel in the kernelArea
+            foreach (KeyValuePair<int, Voxel> kvp in kernelArea)
+            {
+                Voxel voxel = kvp.Value;
+                /*
+                 * Calculate the distance from the voxel to the trajectory
+                 * 
+                 * For each line segment between P_n and P_{n+1}:
+                 *      distanceLineSegment[n] = min(dist(voxel, P_n), dist(voxel, P_{n+1}), dist(voxel, infiniteLine))
+                 * distranceToTrajectory = min(distanceLineSegment)
+                 */
+                float distanceToTrajectory = float.MaxValue;
+                for (int i = 0; i < data.fileSize - 1; i++)
+                {
+                    // Calculate the distance between the voxel center and the closest point on the line segment
+                    float distanceLineSegment = HandleUtility.DistancePointLine(voxel.position, data.modelTip[i], data.modelTip[i + 1]); // Extremly time intensive
+                    //Debug.Log(distanceLineSegment);
+                    
+                    // Check if this a closer point than what was previously known
+                    if (distanceLineSegment < distanceToTrajectory) distanceToTrajectory = distanceLineSegment;
+                }
+                
+                // Linear normalisation of the density so 1 for voxels on the trajectory, and 0 at the kernel size
+                voxel.setLinearDensity(distanceToTrajectory, kernelSize);
             }
             voxelGrid.add(trajectoryDensity); // Add the density of each voxel to the total result
         }
@@ -486,10 +366,15 @@ public class BaseSimulator : MonoBehaviour
         // Spawn the object
         if (dataset != null)
         {
-            VolumeObjectFactory.CreateObject(dataset);
+            VolumeRenderedObject volObjScript = VolumeObjectFactory.CreateObject(dataset);
+            
+            // Set the transfer function
+            TransferFunction tf = TransferFunctionDatabase.LoadTransferFunction(transferFunction);
+            volObjScript.transferFunction = tf;
 
             // Rotate the visualization object back to the default rotation (it is rotated 90 degrees for some reason)
             GameObject obj = GameObject.Find("VolumeRenderedObject_" + dataset.datasetName);
+            obj.transform.position = new Vector3(0.5f, 0.5f, 0.5f);
             obj.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
         }
     }
@@ -513,13 +398,11 @@ public class BaseSimulator : MonoBehaviour
         for(int i = 0; i < numPastPoints; i++)
         {
             int current = data.index - (numPastPoints - i);
-            //points[i] = new Vector3(data.cathTip[current, 0], data.cathTip[current, 1], data.cathTip[current, 2]);
             points[i] = data.modelTip[current];
         }
         for (int i = 0; i < numFuturePoints; i++)
         {
             int current = data.index + i;
-            //points[numPastPoints + i] = new Vector3(data.cathTip[current, 0], data.cathTip[current, 1], data.cathTip[current, 2]);
             points[numPastPoints + i] = data.modelTip[current];
         }
         data.lineRenderer.SetPositions(points);

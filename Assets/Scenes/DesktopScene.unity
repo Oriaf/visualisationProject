@@ -1379,6 +1379,8 @@ MonoBehaviour:
   applySpaceTimeDensity: 1
   numberOfPoints: 2000
   normalizationFactor: 1000
+  transferFunction: Assets/TransferFunctions/greyscale.tf
+  loadFromFile: 1
   voxelsPerDim: 100
   gridLength: 1
   kernelSize: 0.01
