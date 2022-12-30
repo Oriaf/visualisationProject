@@ -1381,7 +1381,7 @@ MonoBehaviour:
   normalizationFactor: 1000
   transferFunction: Assets/TransferFunctions/greyscale.tf
   loadFromFile: 1
-  voxelsPerDim: 100
+  voxelsPerDim: 300
   gridLength: 1
   kernelSize: 0.01
   enableSimulation: 1
