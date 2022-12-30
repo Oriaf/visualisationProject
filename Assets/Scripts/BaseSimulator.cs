@@ -83,7 +83,6 @@ public class BaseSimulator : MonoBehaviour
     public string transferFunction = "Assets/TransferFunctions/greyscale.tf";
 
     [Header("Space-Time Density")]
-    public bool loadFromFile = true; // Whether to load the density from a precalculated file or recalculate it (and store to file)
     public int voxelsPerDim = 1000;
     public float gridLength = 10.0f;
     public float kernelSize = 1.0f;
