@@ -78,6 +78,7 @@ public class BaseSimulator : MonoBehaviour
     public bool applyWarpData = true;
     public bool applyPathTrace = true;
     public bool applySpaceTimeDensity = false;
+    public bool normalize = true;
     public int numberOfPoints;
     public float normalizationFactor = 1000.0f;
     public string transferFunction = "Assets/TransferFunctions/greyscale.tf";
@@ -221,6 +222,12 @@ public class BaseSimulator : MonoBehaviour
             }
         }
         float range = max - min;
+
+        if (!normalize)
+        {
+            range = 1.0f;
+            min = 0.0f;
+        }
 
         Debug.Log("Dataset Coordinate values are in range " + min + "-" + max + ". Range length: " + range);
 

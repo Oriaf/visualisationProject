@@ -1375,12 +1375,12 @@ MonoBehaviour:
   - {fileID: 1971000954}
   slider: {fileID: 2031703441}
   applyWarpData: 0
-  applyPathTrace: 1
+  applyPathTrace: 0
   applySpaceTimeDensity: 1
-  numberOfPoints: 2000
+  normalize: 1
+  numberOfPoints: 100
   normalizationFactor: 1000
   transferFunction: Assets/TransferFunctions/greyscale.tf
-  loadFromFile: 1
   voxelsPerDim: 300
   gridLength: 1
   kernelSize: 0.01
