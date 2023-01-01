@@ -1376,7 +1376,7 @@ MonoBehaviour:
   slider: {fileID: 2031703441}
   applyWarpData: 1
   applyPathTrace: 1
-  applySpaceTimeDensity: 0
+  applySpaceTimeDensity: 1
   normalize: 1
   applyAlign: 1
   numberOfPoints: 5000
@@ -1384,7 +1384,7 @@ MonoBehaviour:
   transferFunction: Assets/TransferFunctions/greyscale.tf
   voxelsPerDim: 300
   gridLength: 1
-  kernelSize: 0.01
+  kernelSize: 0.05
   enableSimulation: 1
   paths:
   - Assets/Recordings/catheter002.txt
