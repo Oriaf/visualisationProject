@@ -3199,6 +3199,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Markers
       objectReference: {fileID: 0}
+    - target: {fileID: 2296330365032686963, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2296330365107482559, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
       propertyPath: m_Enabled
       value: 0

@@ -18,6 +18,7 @@ using JetBrains.Annotations;
 
 public class Simulator : BaseSimulator
 {
+    private float densityVisSpeed = 0.2f;
 
     override protected void handleInput()
     {
@@ -40,45 +41,84 @@ public class Simulator : BaseSimulator
         }
 
         // Right arrow key plays the animation forward in time
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetKeyDown(KeyCode.RightArrow) && !applySpaceTimeDensity)
         {
             rewind = false;
             forward = true;
         }
         // Left arrow key rewinds the animation
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        else if (Input.GetKeyDown(KeyCode.LeftArrow) && !applySpaceTimeDensity)
         {
             rewind = true;
             forward = false;
         }
 
-        // Down arrow key reduces playback speed of the animation
+        // Left arrow key decreases the cut of value of the visibility window
+        if (Input.GetKey(KeyCode.LeftArrow) && applySpaceTimeDensity)
+        {
+            Vector2 visWindow = volObjScript.GetVisibilityWindow();
+            visWindow.x -= densityVisSpeed * Time.deltaTime;
+            if (visWindow.x < 0.0f) visWindow.x = 0;
+            volObjScript.SetVisibilityWindow(visWindow);
+        }
+        // Right arrow key increases the cut of value of the visibility window
+        else if (Input.GetKey(KeyCode.RightArrow) && applySpaceTimeDensity)
+        {
+            Vector2 visWindow = volObjScript.GetVisibilityWindow();
+            visWindow.x += densityVisSpeed * Time.deltaTime;
+            if (visWindow.x > visWindow.y) visWindow.x = visWindow.y;
+            volObjScript.SetVisibilityWindow(visWindow);
+        }
+
         if (Input.GetKey(KeyCode.DownArrow))
         {
-            if (playBackSpeed > 0f)
+            //Down arrow key decreases the right cut off value of the visibility window
+            if (applySpaceTimeDensity)
             {
-                playBackSpeed -= maxPlaybackSpeed / 2f * Time.deltaTime;
+                Vector2 visWindow = volObjScript.GetVisibilityWindow();
+                visWindow.y -= densityVisSpeed * Time.deltaTime;
+                if (visWindow.y < visWindow.x) visWindow.y = visWindow.x;
+                volObjScript.SetVisibilityWindow(visWindow);
             }
+            // Down arrow key reduces playback speed of the animation
             else
             {
-                paused = true;
+                if (playBackSpeed > 0f)
+                {
+                    playBackSpeed -= maxPlaybackSpeed / 2f * Time.deltaTime;
+                }
+                else
+                {
+                    paused = true;
+                }
             }
-
+            
             if (playBackSpeed < 0.1f && !paused)
             {
                 playBackSpeed = 0.5f;
             }
         }
-        // Up arrow key increases playback speed of the animation
         else if (Input.GetKey(KeyCode.UpArrow))
         {
-            if (playBackSpeed < maxPlaybackSpeed)
+            //Up arrow key increases the right cut off value of the visibility window
+            if (applySpaceTimeDensity)
             {
-                if (paused)
+                Vector2 visWindow = volObjScript.GetVisibilityWindow();
+                visWindow.y += densityVisSpeed * Time.deltaTime;
+                if (visWindow.y > 1.0f) visWindow.y = 1;
+                volObjScript.SetVisibilityWindow(visWindow);
+            }
+            else
+            {
+                // Up arrow key increases playback speed of the animation
+                if (playBackSpeed < maxPlaybackSpeed)
                 {
-                    paused = false;
+                    if (paused)
+                    {
+                        paused = false;
+                    }
+                    playBackSpeed += maxPlaybackSpeed / 2f * Time.deltaTime;
                 }
-                playBackSpeed += maxPlaybackSpeed / 2f * Time.deltaTime;
             }
         }
 

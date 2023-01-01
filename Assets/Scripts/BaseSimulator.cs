@@ -88,6 +88,7 @@ public class BaseSimulator : MonoBehaviour
     public float gridLength = 10.0f;
     public float kernelSize = 1.0f;
     private VoxelGrid voxelGrid;
+    protected VolumeRenderedObject volObjScript;
 
     [Header("Simulation")]
     public bool enableSimulation = true;
@@ -372,7 +373,7 @@ public class BaseSimulator : MonoBehaviour
         // Spawn the object
         if (dataset != null)
         {
-            VolumeRenderedObject volObjScript = VolumeObjectFactory.CreateObject(dataset);
+            volObjScript = VolumeObjectFactory.CreateObject(dataset);
             
             // Set the transfer function
             TransferFunction tf = TransferFunctionDatabase.LoadTransferFunction(transferFunction);

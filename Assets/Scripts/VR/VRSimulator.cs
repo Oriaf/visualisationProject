@@ -20,8 +20,16 @@ using UnityEngine.SceneManagement;
 
 public class VRSimulator : BaseSimulator
 {
+    private float densityVisSpeed = 0.2f;
+    
     [Header("VR Settings")]
     public Transform leftVRController;
+
+    public float leftSens = -0.8f;
+    public float rightSens = 0.7f;
+    public float upSens = 0.6f;
+    public float downSens = -0.6f;
+    
     [SerializeField] private InputActionReference timeController = null;
     [SerializeField] private InputActionReference transparencyController = null;
     [SerializeField] private InputActionReference toggleTransparent = null;
@@ -38,6 +46,83 @@ public class VRSimulator : BaseSimulator
 
         if (timeInputVal != Vector2.zero) // If there is input controlling the playback
         {
+            if (applySpaceTimeDensity)
+            {
+                if (timeInputVal.x > rightSens) // If there is input to increase the left visbility cutoff
+                {
+                    Vector2 visWindow = volObjScript.GetVisibilityWindow();
+                    visWindow.x += densityVisSpeed * Time.deltaTime;
+                    if (visWindow.x > visWindow.y) visWindow.x = visWindow.y;
+                    volObjScript.SetVisibilityWindow(visWindow);
+                }
+                else if (timeInputVal.x < leftSens) // If there is input to decrease the left visbility window cutoff
+                {
+                    Vector2 visWindow = volObjScript.GetVisibilityWindow();
+                    visWindow.x -= densityVisSpeed * Time.deltaTime;
+                    if (visWindow.x < 0.0f) visWindow.x = 0;
+                    volObjScript.SetVisibilityWindow(visWindow);
+                }
+
+                if (timeInputVal.y > upSens) // If there is input to increase the right visibility window cutoff
+                {
+                    Vector2 visWindow = volObjScript.GetVisibilityWindow();
+                    visWindow.y += densityVisSpeed * Time.deltaTime;
+                    if (visWindow.y > 1.0f) visWindow.y = 1;
+                    volObjScript.SetVisibilityWindow(visWindow);
+                }
+                else if (timeInputVal.y < downSens) // If there is input to decrease the right visibility window cutoff
+                {
+                    Vector2 visWindow = volObjScript.GetVisibilityWindow();
+                    visWindow.y -= densityVisSpeed * Time.deltaTime;
+                    if (visWindow.y < visWindow.x) visWindow.y = visWindow.x;
+                    volObjScript.SetVisibilityWindow(visWindow);
+                }
+            }
+            else
+            {
+                if (timeInputVal.x > rightSens) // If there is input to switch to forward playback
+                {
+                    rewind = false;
+                    forward = true;
+                }
+                else if (timeInputVal.x < leftSens) // If there is input to rewind
+                {
+                    rewind = true;
+                    forward = false;
+                }
+
+                if (timeInputVal.y > upSens) // If there is input to increase the playback speed
+                {
+                    if (playBackSpeed < maxPlaybackSpeed)
+                    {
+                        if (paused)
+                        {
+                            paused = false;
+                        }
+                        playBackSpeed += maxPlaybackSpeed / 2f * timeInputVal.y * Time.deltaTime;
+                    }
+                }
+                else if (timeInputVal.y < downSens) // If there is input to reduce the playback speed
+                {
+                    if (playBackSpeed > 1f)
+                    {
+                        playBackSpeed -= maxPlaybackSpeed / 2f * -timeInputVal.y * Time.deltaTime;
+                    }
+                    else
+                    {
+                        paused = true;
+                    }
+
+                    if (playBackSpeed < 0.1f && !paused)
+                    {
+                        playBackSpeed = 0.5f;
+                    }
+
+
+                    Debug.Log(playBackSpeed);
+                }
+            }
+            
             //Todo: The input values might need to be adjusted based on hardware
             if (timeInputVal.x > 0.7) // If there is input to switch to forward playback
             {
