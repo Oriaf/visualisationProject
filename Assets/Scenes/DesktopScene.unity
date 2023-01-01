@@ -1379,7 +1379,7 @@ MonoBehaviour:
   applySpaceTimeDensity: 0
   normalize: 1
   applyAlign: 1
-  numberOfPoints: 100
+  numberOfPoints: 5000
   normalizationFactor: 1000
   transferFunction: Assets/TransferFunctions/greyscale.tf
   voxelsPerDim: 300
@@ -1387,9 +1387,7 @@ MonoBehaviour:
   kernelSize: 0.01
   enableSimulation: 1
   paths:
-  - Assets/Recordings/catheter001.txt
   - Assets/Recordings/catheter002.txt
-  - Assets/Recordings/catheter003.txt
   - Assets/Recordings/catheter004.txt
   - Assets/Recordings/catheter005.txt
   - Assets/Recordings/catheter006.txt

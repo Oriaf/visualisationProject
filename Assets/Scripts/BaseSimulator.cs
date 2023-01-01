@@ -113,6 +113,7 @@ public class BaseSimulator : MonoBehaviour
     protected float timer = 0;
     protected bool transparencyEnabled;
     protected List<Data> dataList;
+    protected Vector3 tipOffset = new Vector3(0.0f, -0.22304f, -0.002f); // Constant for the length from cathCenter to the bottom tip of the catheter
 
     [Header("Rendered Representation")] //TODO: Move into data?
     public GameObject phantomSkull;
@@ -224,23 +225,44 @@ public class BaseSimulator : MonoBehaviour
             }
         }
         float range = max - min;*/
-
-        float min = minTip;
-        float range = rangeTip;
-
-        if (!normalize)
+        
+        //Align positions at the barycenter
+        Vector3 alignmentOffset;
+        float range;
+        if (normalize)
         {
-            range = 1.0f;
-            min = 0.0f;
+            alignmentOffset = new Vector3(minTip, minTip, minTip);
+            range = rangeTip;
         }
+        else
+        {
+            alignmentOffset = Vector3.zero;
+            range = 1.0f;
+        }
+        
 
         //Debug.Log("Dataset Coordinate values are in range " + min + "-" + max + ". Range length: " + range);
 
         // Pre-run the simulation and sample the position of the tip at each index
         for (int i = 0; i < data.fileSize; i++)
         {
+            Vector3 cathTop = new Vector3(data.cathTip[i, 0], data.cathTip[i, 1], data.cathTip[i, 2]);
+            Vector3 cathTopLeft = new Vector3(data.cathTopLeft[i, 0], data.cathTopLeft[i, 1], data.cathTopLeft[i, 2]);
+            Vector3 cathTopRight = new Vector3(data.cathTopRight[i, 0], data.cathTopRight[i, 1], data.cathTopRight[i, 2]);
+            Vector3 cathBottomLeft = new Vector3(data.cathBottomLeft[i, 0], data.cathBottomLeft[i, 1], data.cathBottomLeft[i, 2]);
+            Vector3 cathBottomRight = new Vector3(data.cathBottomRight[i, 0], data.cathBottomRight[i, 1], data.cathBottomRight[i, 2]);
+
+            Vector3 cathCenter = (cathTop + cathTopLeft + cathTopRight + cathBottomLeft + cathBottomRight) / 5.0f;
+
+            Vector3 cathRight = cathTopLeft - cathTopRight;
+            Vector3 cathUp = cathTopRight - cathBottomRight - Vector3.Project(cathTopRight - cathBottomRight, cathRight);
+            Quaternion rot = Quaternion.LookRotation(cathRight, cathUp);
+
             // Record the tip's position
-            data.modelTip[i] = (new Vector3(data.cathTip[i, 0] - min, data.cathTip[i, 1] - min, data.cathTip[i, 2] - min)) / range;
+            Vector3 modelTip = cathCenter + (rot * tipOffset);
+            data.modelTip[i] = (modelTip - alignmentOffset) / range; // Scale and translate so that all data is within the unit cube
+
+            //data.modelTip[i] = (new Vector3(data.cathTip[i, 0] - min, data.cathTip[i, 1] - min, data.cathTip[i, 2] - min)) / range;
             /*for (int j = 0; j < 3; j++)
             {
                 if (data.modelTip[i][j] < 0.0f || data.modelTip[i][j] > 1.0f)
@@ -778,20 +800,38 @@ public class BaseSimulator : MonoBehaviour
         data.cathCenter.transform.position = new Vector3((data.x1 + data.x2 + data.x3 + data.x4 + data.x5) / 5.0f, (data.y1 + data.y2 + data.y3 + data.y4 + data.y5) / 5.0f, (data.z1 + data.z2 + data.z3 + data.z4 + data.z5) / 5.0f);
         data.skullCenter.transform.position = new Vector3((data.x6 + data.x7 + data.x8 + data.x9 + data.x10) / 5.0f, (data.y6 + data.y7 + data.y8 + data.y9 + data.y10) / 5.0f, (data.z6 + data.z7 + data.z8 + data.z9 + data.z10) / 5.0f);
 
+
     }
 
     private void findMinMax(List<Data> dataList)
     {
         float min = float.MaxValue;
         float max = float.MinValue;
+        
         foreach (Data data in dataList)
         {
             for (int i = 0; i < data.fileSize; i++)
             {
+                //Calculate where the tip of the catheter is
+                Vector3 cathTop = new Vector3(data.cathTip[i, 0], data.cathTip[i, 1], data.cathTip[i, 2]);
+                Vector3 cathTopLeft = new Vector3(data.cathTopLeft[i, 0], data.cathTopLeft[i, 1], data.cathTopLeft[i, 2]);
+                Vector3 cathTopRight = new Vector3(data.cathTopRight[i, 0], data.cathTopRight[i, 1], data.cathTopRight[i, 2]);
+                Vector3 cathBottomLeft = new Vector3(data.cathBottomLeft[i, 0], data.cathBottomLeft[i, 1], data.cathBottomLeft[i, 2]);
+                Vector3 cathBottomRight = new Vector3(data.cathBottomRight[i, 0], data.cathBottomRight[i, 1], data.cathBottomRight[i, 2]);
+
+                Vector3 cathCenter = (cathTop + cathTopLeft + cathTopRight + cathBottomLeft + cathBottomRight) / 5.0f;
+
+                Vector3 cathRight = cathTopLeft - cathTopRight;
+                Vector3 cathUp = cathTopRight - cathBottomRight - Vector3.Project(cathTopRight - cathBottomRight, cathRight);
+                Quaternion rot = Quaternion.LookRotation(cathRight, cathUp);
+
+                // Record the tip's position
+                Vector3 modelTip = cathCenter + (rot * tipOffset);
                 for (int j = 0; j < 3; j++)
                 {
-                    if (data.cathTip[i, j] > max) max = data.cathTip[i, j];
-                    if (data.cathTip[i, j] < min) min = data.cathTip[i, j];
+                    
+                    if (modelTip[j] > max) max = modelTip[j];
+                    if (modelTip[j] < min) min = modelTip[j];
                 }
             }
         }
