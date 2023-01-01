@@ -58,6 +58,7 @@ public class BaseSimulator : MonoBehaviour
         public float[,] headTopLeft, headTopRight, headBottomLeft, headBottomRight, headHole, headBrow,
                 cathTip, cathTopLeft, cathTopRight, cathBottomLeft, cathBottomRight, cathEnd;
         public Vector3[] modelTip; // Calculated from the data by pre-runing the simulation
+        public float minTip, maxTip;
 
         //coordinates for 3D objects transform update
         public float x1, x2, x3, x4, x5, x6, x7, x8, x9, x10,
@@ -79,9 +80,14 @@ public class BaseSimulator : MonoBehaviour
     public bool applyPathTrace = true;
     public bool applySpaceTimeDensity = false;
     public bool normalize = true;
+    public bool applyAlign = true;
     public int numberOfPoints;
     public float normalizationFactor = 1000.0f;
     public string transferFunction = "Assets/TransferFunctions/greyscale.tf";
+    
+    private float minTip;
+    private float maxTip;
+    private float rangeTip;
 
     [Header("Space-Time Density")]
     public int voxelsPerDim = 1000;
@@ -136,6 +142,15 @@ public class BaseSimulator : MonoBehaviour
         {"Assets/Recordings/catheter006.txt",new Vector3(42.3742104f,181.589996f,5.4209547f) }, //file : cathether006
         {"Assets/Recordings/catheter007.txt",new Vector3(41.510006f,177.755005f,359.040009f) } //file : cathether007
         };
+    protected Dictionary<String, Vector3> offsetPos = new Dictionary<String, Vector3> {
+        {"Assets/Recordings/catheter001.txt", new Vector3(0.036f, 0.866f, -0.283f)}, 
+        {"Assets/Recordings/catheter002.txt", new Vector3(0.034f, 0.864f, -0.283f)},
+        {"Assets/Recordings/catheter003.txt", new Vector3(0.038f, 0.866f, -0.288f)},
+        {"Assets/Recordings/catheter004.txt", new Vector3(0.035f, 0.861f, -0.293f)},
+        {"Assets/Recordings/catheter005.txt", new Vector3(0.030f, 0.860f, -0.294f)}, 
+        {"Assets/Recordings/catheter006.txt", new Vector3(0.006f, 0.868f, -0.252f)},
+        {"Assets/Recordings/catheter007.txt", new Vector3(0.007f, 0.866f, -0.252f)} 
+        };
 
     protected virtual void init()
     {
@@ -158,6 +173,7 @@ public class BaseSimulator : MonoBehaviour
             dataList.Add(extractData(path));
         }
         maxFileSize = warpData(dataList);
+        findMinMax(dataList);
         foreach (Data data in dataList)
         {
             findTrueTip(data);
@@ -196,23 +212,8 @@ public class BaseSimulator : MonoBehaviour
     {
         data.modelTip = new Vector3[data.fileSize];
 
-        Transform tip = null;
-        for(int i = 0; i < data.cathCenter.transform.childCount; i++)
-        {
-            Transform child = data.cathCenter.transform.GetChild(i);
-            if (string.Equals(child.name, "Catheter"))
-            {
-                for (int j = 0; j < child.childCount; j++)
-                {
-                    Transform grandChild = child.GetChild(j);
-                    if (string.Equals(grandChild.name, "tip")) tip = grandChild;
-                }
-            }
-        }
-        if (tip == null) Debug.LogError("Couldn't find the tip of the cather!");
-
         // Find the smallest and largest coordinate value among all of x, y, z for all indexes
-        float min = float.MaxValue;
+        /*float min = float.MaxValue;
         float max = float.MinValue;
         for (int i = 0; i < data.fileSize; i++)
         {
@@ -222,7 +223,10 @@ public class BaseSimulator : MonoBehaviour
                 if (data.cathTip[i, j] < min) min = data.cathTip[i, j];
             }
         }
-        float range = max - min;
+        float range = max - min;*/
+
+        float min = minTip;
+        float range = rangeTip;
 
         if (!normalize)
         {
@@ -230,16 +234,18 @@ public class BaseSimulator : MonoBehaviour
             min = 0.0f;
         }
 
-        Debug.Log("Dataset Coordinate values are in range " + min + "-" + max + ". Range length: " + range);
+        //Debug.Log("Dataset Coordinate values are in range " + min + "-" + max + ". Range length: " + range);
 
         // Pre-run the simulation and sample the position of the tip at each index
         for (int i = 0; i < data.fileSize; i++)
         {
             // Record the tip's position
             data.modelTip[i] = (new Vector3(data.cathTip[i, 0] - min, data.cathTip[i, 1] - min, data.cathTip[i, 2] - min)) / range;
-            //data.modelTip[i] = new Vector3(data.cathTip[i, 0], data.cathTip[i, 1], data.cathTip[i, 2]);
-            //Debug.Log(i + ": " + data.modelTip[i]);
-            //Debug.Log(i + ": " + data.cathTip[i, 0] + ", " + data.cathTip[i, 1] + ", " + data.cathTip[i, 2]);
+            /*for (int j = 0; j < 3; j++)
+            {
+                if (data.modelTip[i][j] < 0.0f || data.modelTip[i][j] > 1.0f)
+                    Debug.LogError("In " + data.path + ", at " + i + ": " + data.modelTip[i]);
+            }*/
         }
     }
 
@@ -421,7 +427,6 @@ public class BaseSimulator : MonoBehaviour
         // If the markers are set, we have data, we still have more data
         if (MarkerCheck(data) && data.fileSize > 0 && data.moreData)
         {
-
             //normalize positions
             Normalize(data);
 
@@ -706,6 +711,7 @@ public class BaseSimulator : MonoBehaviour
 
         // Initialize the markers for this data
         GameObject ourMarkers = Instantiate(markers);
+        ourMarkers.name = "markers_" + path;
         extractDataMarkersHelper(data, ourMarkers);
 
         //initialize arrays
@@ -755,6 +761,9 @@ public class BaseSimulator : MonoBehaviour
             }
         }
 
+        // Align the data so that the skulls brow is centered on the origin
+        if(applyAlign) Align(data);
+
         return data;
     }
 
@@ -769,6 +778,50 @@ public class BaseSimulator : MonoBehaviour
         data.cathCenter.transform.position = new Vector3((data.x1 + data.x2 + data.x3 + data.x4 + data.x5) / 5.0f, (data.y1 + data.y2 + data.y3 + data.y4 + data.y5) / 5.0f, (data.z1 + data.z2 + data.z3 + data.z4 + data.z5) / 5.0f);
         data.skullCenter.transform.position = new Vector3((data.x6 + data.x7 + data.x8 + data.x9 + data.x10) / 5.0f, (data.y6 + data.y7 + data.y8 + data.y9 + data.y10) / 5.0f, (data.z6 + data.z7 + data.z8 + data.z9 + data.z10) / 5.0f);
 
+    }
+
+    private void findMinMax(List<Data> dataList)
+    {
+        float min = float.MaxValue;
+        float max = float.MinValue;
+        foreach (Data data in dataList)
+        {
+            for (int i = 0; i < data.fileSize; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    if (data.cathTip[i, j] > max) max = data.cathTip[i, j];
+                    if (data.cathTip[i, j] < min) min = data.cathTip[i, j];
+                }
+            }
+        }
+        float range = max - min;
+
+        minTip = min;
+        maxTip = max;
+        rangeTip = range;
+    }
+
+    private void Align(Data data)
+    {
+        Vector3 align = offsetPos[data.path];
+        
+        for (int i = 0; i < data.fileSize; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                data.cathTip[i, j] -= align[j];
+                data.cathTopLeft[i, j] -= align[j];
+                data.cathTopRight[i, j] -= align[j];
+                data.cathBottomLeft[i, j] -= align[j];
+                data.cathBottomRight[i, j] -= align[j];
+                data.headTopLeft[i, j] -= align[j];
+                data.headTopRight[i, j] -= align[j];
+                data.headBottomLeft[i, j] -= align[j];
+                data.headBottomRight[i, j] -= align[j];
+                data.headBrow[i, j] -= align[j];
+            }
+        }
     }
 
     //method to normalize coordinates in Unity scene

@@ -1374,10 +1374,11 @@ MonoBehaviour:
   - {fileID: 1411628064}
   - {fileID: 1971000954}
   slider: {fileID: 2031703441}
-  applyWarpData: 0
-  applyPathTrace: 0
-  applySpaceTimeDensity: 1
+  applyWarpData: 1
+  applyPathTrace: 1
+  applySpaceTimeDensity: 0
   normalize: 1
+  applyAlign: 1
   numberOfPoints: 100
   normalizationFactor: 1000
   transferFunction: Assets/TransferFunctions/greyscale.tf
@@ -1386,9 +1387,13 @@ MonoBehaviour:
   kernelSize: 0.01
   enableSimulation: 1
   paths:
-  - Assets/Recordings/catheter006.txt
-  - Assets/Recordings/catheter005.txt
+  - Assets/Recordings/catheter001.txt
+  - Assets/Recordings/catheter002.txt
+  - Assets/Recordings/catheter003.txt
   - Assets/Recordings/catheter004.txt
+  - Assets/Recordings/catheter005.txt
+  - Assets/Recordings/catheter006.txt
+  - Assets/Recordings/catheter007.txt
   maxPlaybackSpeed: 150
   phantomSkull: {fileID: 2296330364526986364}
   phantomBrain: {fileID: 2296330364526986363}
