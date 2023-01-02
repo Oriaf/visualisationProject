@@ -119,61 +119,18 @@ public class VRSimulator : BaseSimulator
                     }
 
 
-                    Debug.Log(playBackSpeed);
+                    //Debug.Log(playBackSpeed);
                 }
-            }
-            
-            //Todo: The input values might need to be adjusted based on hardware
-            if (timeInputVal.x > 0.7) // If there is input to switch to forward playback
-            {
-                rewind = false;
-                forward = true;
-            }
-            else if (timeInputVal.x < -0.8f) // If there is input to rewind
-            {
-                rewind = true;
-                forward = false;
-            }
-
-            if (timeInputVal.y > 0.6f) // If there is input to increase the playback speed
-            {
-                if (playBackSpeed < maxPlaybackSpeed)
-                {
-                    if (paused)
-                    {
-                        paused = false;
-                    }
-                    playBackSpeed += maxPlaybackSpeed / 2f * timeInputVal.y * Time.deltaTime;
-                }
-            }
-            else if (timeInputVal.y < -0.6f) // If there is input to reduce the playback speed
-            {
-                if (playBackSpeed > 1f)
-                {
-                    playBackSpeed -= maxPlaybackSpeed / 2f * -timeInputVal.y * Time.deltaTime;
-                }
-                else
-                {
-                    paused = true;
-                }
-
-                if (playBackSpeed < 0.1f && !paused)
-                {
-                    playBackSpeed = 0.5f;
-                }
-
-
-                Debug.Log(playBackSpeed);
             }
 
             //Debug.Log("Forward: " + forward + "| Backward: " + rewind + "| Playback speed: " + playBackSpeed);
 
         }
-        Debug.Log("b " + toggleVal);
+        //Debug.Log("b " + toggleVal);
 
         if (toggleVal > 0.8f && !transparencyToggleInProgress) //If we got input to toggle transparency
         {
-            Debug.Log(toggleVal);
+            //Debug.Log(toggleVal);
             transparencyToggleInProgress = true;
             ToggleTransparency(); // Toggle transparency instantly
         }

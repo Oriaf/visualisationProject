@@ -413,6 +413,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Markers (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 2296330365032686963, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2296330365107482558, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -743,7 +747,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1406889823}
-  - component: {fileID: 1406889822}
   - component: {fileID: 1406889824}
   m_Layer: 0
   m_Name: SimulationManager
@@ -752,27 +755,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1406889822
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1406889821}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a19bc027150a984d9f78b368f2a0510, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  markers: {fileID: 0}
-  FrameStuff: []
-  slider: {fileID: 2031703441}
-  paths: []
-  maxPlaybackSpeed: 50
-  phantomSkull: {fileID: 0}
-  phantomBrain: {fileID: 0}
-  transparentSkullMat: {fileID: 0}
-  transparentBrainMat: {fileID: 0}
 --- !u!4 &1406889823
 Transform:
   m_ObjectHideFlags: 0
@@ -806,14 +788,34 @@ MonoBehaviour:
   - {fileID: 1178738489}
   - {fileID: 425814907}
   slider: {fileID: 2031703441}
+  applyWarpData: 1
+  applyPathTrace: 0
+  applySpaceTimeDensity: 1
+  normalize: 1
+  applyAlign: 1
+  numberOfPoints: 100
+  normalizationFactor: 1000
+  transferFunction: Assets/TransferFunctions/greyscale.tf
+  voxelsPerDim: 300
+  gridLength: 1
+  kernelSize: 0.05
+  enableSimulation: 1
   paths:
+  - Assets/Recordings/catheter002.txt
+  - Assets/Recordings/catheter004.txt
+  - Assets/Recordings/catheter005.txt
   - Assets/Recordings/catheter006.txt
+  - Assets/Recordings/catheter007.txt
   maxPlaybackSpeed: 150
   phantomSkull: {fileID: 1554036188}
   phantomBrain: {fileID: 1554036187}
   transparentSkullMat: {fileID: 2100000, guid: 6851123c4974f894a9765c2d6be86ae9, type: 2}
   transparentBrainMat: {fileID: 2100000, guid: c055b4f1f2e70a74a9ccf1aec5c39279, type: 2}
   leftVRController: {fileID: 99851664}
+  leftSens: -0.8
+  rightSens: 0.7
+  upSens: 0.6
+  downSens: -0.6
   timeController: {fileID: 4826890894652462616, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   transparencyController: {fileID: 6826371102190220578, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   toggleTransparent: {fileID: -2425372059492432088, guid: c348712bda248c246b8c49b3db54643f, type: 3}

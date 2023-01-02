@@ -409,7 +409,7 @@ public class BaseSimulator : MonoBehaviour
 
             // Rotate the visualization object back to the default rotation (it is rotated 90 degrees for some reason)
             GameObject obj = GameObject.Find("VolumeRenderedObject_" + dataset.datasetName);
-            obj.transform.position = new Vector3(0.5f, 0.5f, 0.5f);
+            obj.transform.position = new Vector3(1.0f, 1.0f, 1.0f);
             obj.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
         }
     }
