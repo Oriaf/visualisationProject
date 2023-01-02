@@ -81,6 +81,7 @@ public class BaseSimulator : MonoBehaviour
     public bool applySpaceTimeDensity = false;
     public bool normalize = true;
     public bool applyAlign = true;
+    public bool tryAlignData = true;
     public int numberOfPoints;
     public float normalizationFactor = 1000.0f;
     public string transferFunction = "Assets/TransferFunctions/greyscale.tf";
@@ -88,6 +89,7 @@ public class BaseSimulator : MonoBehaviour
     private float minTip;
     private float maxTip;
     private float rangeTip;
+    private float[,] averageDist;
 
     [Header("Space-Time Density")]
     public int voxelsPerDim = 1000;
@@ -174,12 +176,19 @@ public class BaseSimulator : MonoBehaviour
             dataList.Add(extractData(path));
         }
         maxFileSize = warpData(dataList);
+
         findMinMax(dataList);
         foreach (Data data in dataList)
         {
             findTrueTip(data);
         }
         moreData = true;
+
+        if (tryAlignData)
+        {
+            findAverageDist(dataList);
+            applyAverageDist(dataList);
+        }
 
         init();
 
@@ -409,7 +418,8 @@ public class BaseSimulator : MonoBehaviour
 
             // Rotate the visualization object back to the default rotation (it is rotated 90 degrees for some reason)
             GameObject obj = GameObject.Find("VolumeRenderedObject_" + dataset.datasetName);
-            obj.transform.position = new Vector3(1.0f, 1.0f, 1.0f);
+            //obj.transform.position = new Vector3(1.0f, 1.0f, 1.0f);
+            obj.transform.position = new Vector3(0.5f, 0.5f, 0.5f);
             obj.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
         }
     }
@@ -840,6 +850,66 @@ public class BaseSimulator : MonoBehaviour
         minTip = min;
         maxTip = max;
         rangeTip = range;
+    }
+
+    private void findAverageDist(List<Data> dataList)
+    {
+        averageDist = new float[dataList.Count, 3];
+        Data refData = dataList[0];
+        int i = 0;
+
+        float[,] minY = new float[dataList.Count, 3];
+        foreach(Data data in dataList)
+        {
+            /*float[] dist = { 0, 0, 0 };
+            for(int j = 0; j < data.fileSize; j++)
+            {
+                for(int k = 0; k < 3; k++)
+                {
+                    dist[k] += refData.modelTip[j][k] - data.modelTip[j][k];
+                }   
+            }
+
+            for (int k = 0; k < 3; k++)
+            {
+                averageDist[i, k] = dist[k] / data.fileSize;
+            }*/
+
+            minY[i, 1] = data.modelTip[0].y;
+            for (int j = 0; j < data.fileSize; j++)
+            {
+                if (data.modelTip[j].y < minY[i, 1])
+                {
+                    for (int k = 0; k < 3; k++)
+                    {
+                        minY[i, k] = data.modelTip[j][k];
+                    }
+                }
+            }
+
+            for (int k = 0; k < 3; k++)
+            {
+                averageDist[i, k] = minY[0, k] - minY[i, k];
+            }
+
+            i++;
+        }
+    }
+
+    private void applyAverageDist(List<Data> dataList)
+    {
+        int k = 0;
+        foreach (Data data in dataList)
+        {
+            for(int i = 0; i < data.fileSize; i++)
+            {
+                for(int j = 0; j < 3; j++)
+                {
+                    data.modelTip[i][j] += averageDist[k, j];
+                }
+            }
+            k++;
+        }
     }
 
     private void Align(Data data)
