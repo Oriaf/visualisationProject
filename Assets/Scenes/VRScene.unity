@@ -4476,25 +4476,9 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2031703441}
     - target: {fileID: 7692170560713393360, guid: e9458f90d7bef02428a2cd8478888078, type: 3}
-      propertyPath: solidMat
-      value: 
-      objectReference: {fileID: 2100000, guid: 347db0cc6f10b274e9fd3b4cac428b04, type: 2}
-    - target: {fileID: 7692170560713393360, guid: e9458f90d7bef02428a2cd8478888078, type: 3}
-      propertyPath: RleftSens
-      value: -0.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 7692170560713393360, guid: e9458f90d7bef02428a2cd8478888078, type: 3}
-      propertyPath: togglePlay
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 7692170560713393360, guid: e9458f90d7bef02428a2cd8478888078, type: 3}
       propertyPath: groundTruth
       value: 
       objectReference: {fileID: 979961703}
-    - target: {fileID: 7692170560713393360, guid: e9458f90d7bef02428a2cd8478888078, type: 3}
-      propertyPath: markerDist.z
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7692170560713393360, guid: e9458f90d7bef02428a2cd8478888078, type: 3}
       propertyPath: phantomBrain
       value: 
@@ -4504,25 +4488,9 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1554036188}
     - target: {fileID: 7692170560713393360, guid: e9458f90d7bef02428a2cd8478888078, type: 3}
-      propertyPath: markerSizeMax
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7692170560713393360, guid: e9458f90d7bef02428a2cd8478888078, type: 3}
-      propertyPath: markerSizeMin
-      value: 0.01
-      objectReference: {fileID: 0}
-    - target: {fileID: 7692170560713393360, guid: e9458f90d7bef02428a2cd8478888078, type: 3}
       propertyPath: leftController
       value: 
       objectReference: {fileID: 99851666}
-    - target: {fileID: 7692170560713393360, guid: e9458f90d7bef02428a2cd8478888078, type: 3}
-      propertyPath: transparentMat
-      value: 
-      objectReference: {fileID: 2100000, guid: f1f01de25b7c2fa4694abf8afa5ee295, type: 2}
-    - target: {fileID: 7692170560713393360, guid: e9458f90d7bef02428a2cd8478888078, type: 3}
-      propertyPath: spaceController
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 7692170560713393360, guid: e9458f90d7bef02428a2cd8478888078, type: 3}
       propertyPath: leftVRController
       value: 
