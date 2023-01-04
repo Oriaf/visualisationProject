@@ -1105,6 +1105,18 @@ public class BaseSimulator : MonoBehaviour
             line = reader.ReadLine();
         }
     }
+    
+    protected void playPause()
+    {
+        if (paused)
+        {
+            paused = false;
+        }
+        else
+        {
+            paused = true;
+        }
+    }
 
     protected void RestartScene()
     {

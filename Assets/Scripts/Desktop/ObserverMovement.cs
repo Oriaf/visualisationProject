@@ -11,7 +11,7 @@ using UnityEngine;
 public class ObserverMovement : MonoBehaviour
 {
     public float moveSpeed;
-    Vector3 observerPosition;
+    public Vector3 observerPosition;
     public Transform orientation;
 
     // Start is called before the first frame update

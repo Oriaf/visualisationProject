@@ -28,16 +28,10 @@ public class Simulator : BaseSimulator
         {
             ToggleTransparency();
         }
-        if (transparencyEnabled) // Check if we want to adjust the transparency (Disabled?)
+
+        if (Input.GetKeyDown((KeyCode.Space)))
         {
-            if (Input.GetKey(KeyCode.Mouse0))
-            {
-                // AdjustTransparency(10);
-            }
-            if (Input.GetKey(KeyCode.Mouse1))
-            {
-                //AdjustTransparency(-10);
-            }
+            playPause();
         }
 
         // Right arrow key plays the animation forward in time
