@@ -75,6 +75,12 @@ public class BaseSimulator : MonoBehaviour
     public Text[] FrameStuff;
     public Slider slider; //slider to control the animation speed
 
+    [Header("Data Collection")]
+    public GameObject marker;
+    public GameObject groundTruth;
+    protected bool collectionStarted = false;
+    private float startTime;
+
     [Header("Visualization")]
     public bool applyWarpData = true;
     public bool applyPathTrace = true;
@@ -167,7 +173,7 @@ public class BaseSimulator : MonoBehaviour
         paused = false;
         rewind = false;
         forward = true;
-        timeToCall = timeDelay;
+        timeToCall = Mathf.Infinity;
 
         // Read in all specified data
         dataList = new List<Data>();
@@ -1186,5 +1192,48 @@ public class BaseSimulator : MonoBehaviour
     public int GetCurrentIndex()
     {
         return index;
+    }
+
+    /*
+     * Starts the user study and starts collecting data.
+     * Should be called by an appropriate input from each input scheme
+     */
+    protected void startCollectingData()
+    {
+        Debug.Log("Collecting Data...");
+        
+        // Start measuring data
+        startTime = Time.time;
+
+        // Start the simulation
+        timeToCall = 0.0f;
+
+        collectionStarted = true;
+    }
+    
+    /*
+     * Ends the user study and compiles the data.
+     * Should be called by an appropriate input from each input scheme
+     */
+    protected void endCollectData()
+    {
+        // Get the position of the marker and ground truth
+        Vector3 markerPos = marker.transform.position;
+        Vector3 truePos = groundTruth.transform.position;
+        
+        // Calculate the volume of the marker and ground truth
+        Vector3 markerScale = marker.transform.localScale;
+        Vector3 trueScale = groundTruth.transform.localScale;
+        float markerVolume = (4.0f / 3.0f) * Mathf.PI * Mathf.Pow(markerScale.x, 3);
+        float trueVolume = (4.0f / 3.0f) * Mathf.PI * Mathf.Pow(trueScale.x, 3);
+
+        float timeToComplete = Time.time - startTime;
+        float distToGroundTruth = Vector3.Distance(markerPos, truePos);
+        float diffVolume = markerVolume - trueVolume;
+
+        Debug.Log("Trial Data:");
+        Debug.Log("\tMarker Pos: " + markerPos + ", Ground Truth Pos: " + truePos + ", Distance: " + distToGroundTruth);
+        Debug.Log("\tMarker Volume: " + markerVolume + ", Ground Truth Volume: " + trueVolume + ", Difference: " + diffVolume);
+        Debug.Log("\tTime-to-Complete: " + timeToComplete + "s");
     }
 }

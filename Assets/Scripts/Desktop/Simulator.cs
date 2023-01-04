@@ -22,6 +22,11 @@ public class Simulator : BaseSimulator
 
     override protected void handleInput()
     {
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            if (!collectionStarted) startCollectingData();
+            else endCollectData();
+        }
 
         // Toggle transparency on and off with the Q key
         if (Input.GetKeyDown(KeyCode.Q))
