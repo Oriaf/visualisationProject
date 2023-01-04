@@ -424,8 +424,8 @@ public class BaseSimulator : MonoBehaviour
 
             // Rotate the visualization object back to the default rotation (it is rotated 90 degrees for some reason)
             GameObject obj = GameObject.Find("VolumeRenderedObject_" + dataset.datasetName);
-            //obj.transform.position = new Vector3(1.0f, 1.0f, 1.0f);
-            obj.transform.position = new Vector3(0.5f, 0.5f, 0.5f);
+            obj.transform.position = new Vector3(1.0f, 1.0f, 1.0f);
+            //obj.transform.position = new Vector3(0.5f, 0.5f, 0.5f);
             obj.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
         }
     }
@@ -444,17 +444,18 @@ public class BaseSimulator : MonoBehaviour
         //Debug.Log("# past points: " + numPastPoints + " # future points: " + numFuturePoints);
         data.lineRenderer.positionCount = numPastPoints + numFuturePoints;
 
-        
+
+        Vector3 off = new Vector3(0.5f, 0.5f, 0.5f);
         Vector3[] points = new Vector3[data.lineRenderer.positionCount];
         for(int i = 0; i < numPastPoints; i++)
         {
             int current = data.index - (numPastPoints - i);
-            points[i] = data.modelTip[current];
+            points[i] = data.modelTip[current] + off;
         }
         for (int i = 0; i < numFuturePoints; i++)
         {
             int current = data.index + i;
-            points[numPastPoints + i] = data.modelTip[current];
+            points[numPastPoints + i] = data.modelTip[current] + off;
         }
         data.lineRenderer.SetPositions(points);
     }
