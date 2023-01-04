@@ -58,7 +58,7 @@ MonoBehaviour:
   normalize: 1
   applyAlign: 1
   tryAlignData: 1
-  numberOfPoints: 100
+  numberOfPoints: 50
   normalizationFactor: 1000
   transferFunction: Assets/TransferFunctions/greyscale.tf
   voxelsPerDim: 300
