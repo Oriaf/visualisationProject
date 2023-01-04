@@ -1,0 +1,98 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7692170560713393389
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7692170560713393391}
+  - component: {fileID: 7692170560713393360}
+  m_Layer: 0
+  m_Name: SimulationManagerVR
+  m_TagString: VRSimulator
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7692170560713393391
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7692170560713393389}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.9112694, y: 2.1568925, z: -3.534375}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7692170560713393360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7692170560713393389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdef9a89608fd1040b0902bd7d51918e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  markers: {fileID: 2296330365032686963, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
+  FrameStuff:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  slider: {fileID: 0}
+  marker: {fileID: 0}
+  groundTruth: {fileID: 0}
+  applyWarpData: 1
+  applyPathTrace: 1
+  applySpaceTimeDensity: 0
+  normalize: 1
+  applyAlign: 1
+  tryAlignData: 1
+  numberOfPoints: 100
+  normalizationFactor: 1000
+  transferFunction: Assets/TransferFunctions/greyscale.tf
+  voxelsPerDim: 300
+  gridLength: 1
+  kernelSize: 0.05
+  enableSimulation: 1
+  paths:
+  - Assets/Recordings/catheter004.txt
+  - Assets/Recordings/catheter005.txt
+  maxPlaybackSpeed: 150
+  phantomSkull: {fileID: 0}
+  phantomBrain: {fileID: 0}
+  transparentSkullMat: {fileID: 2100000, guid: 6851123c4974f894a9765c2d6be86ae9, type: 2}
+  transparentBrainMat: {fileID: 2100000, guid: c055b4f1f2e70a74a9ccf1aec5c39279, type: 2}
+  transparentMat: {fileID: 2100000, guid: f1f01de25b7c2fa4694abf8afa5ee295, type: 2}
+  solidMat: {fileID: 2100000, guid: 347db0cc6f10b274e9fd3b4cac428b04, type: 2}
+  markerDist: {x: 0, y: 0, z: 1}
+  markerSizeMin: 0.01
+  markerSizeMax: 0.2
+  leftVRController: {fileID: 0}
+  leftController: {fileID: 0}
+  LleftSens: -0.8
+  LrightSens: 0.7
+  LupSens: 0.6
+  LdownSens: -0.6
+  spaceController: {fileID: 6826371102190220578, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  toggleTransparent: {fileID: -2425372059492432088, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  LtrackClick: {fileID: -7872084352427484024, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  rightVRController: {fileID: 0}
+  RleftSens: -0.8
+  RrightSens: 0.7
+  RupSens: 0.6
+  RdownSens: -0.6
+  togglePlay: {fileID: -6384876503967125875, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  timeController: {fileID: 4826890894652462616, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  annotatePoint: {fileID: -6305722980727576620, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  RtrackClick: {fileID: 4273427074116690752, guid: c348712bda248c246b8c49b3db54643f, type: 3}

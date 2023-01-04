@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2568456569779629958
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2568456569779629956}
+  - component: {fileID: 2568456569779629957}
+  m_Layer: 0
+  m_Name: SimulationManagerDesktop
+  m_TagString: Simulator
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2568456569779629956
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2568456569779629958}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.9112694, y: 2.1568925, z: -3.534375}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2568456569779629957
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2568456569779629958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a19bc027150a984d9f78b368f2a0510, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  markers: {fileID: 2296330365032686963, guid: 9c28aa559343c354c9ee32e4321edee7, type: 3}
+  FrameStuff:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  slider: {fileID: 0}
+  marker: {fileID: 0}
+  groundTruth: {fileID: 0}
+  applyWarpData: 1
+  applyPathTrace: 1
+  applySpaceTimeDensity: 0
+  normalize: 1
+  applyAlign: 1
+  tryAlignData: 1
+  numberOfPoints: 100
+  normalizationFactor: 1000
+  transferFunction: Assets/TransferFunctions/greyscale.tf
+  voxelsPerDim: 300
+  gridLength: 1
+  kernelSize: 0.05
+  enableSimulation: 1
+  paths:
+  - Assets/Recordings/catheter002.txt
+  - Assets/Recordings/catheter004.txt
+  - Assets/Recordings/catheter005.txt
+  - Assets/Recordings/catheter006.txt
+  - Assets/Recordings/catheter007.txt
+  maxPlaybackSpeed: 150
+  phantomSkull: {fileID: 0}
+  phantomBrain: {fileID: 0}
+  transparentSkullMat: {fileID: 2100000, guid: 6851123c4974f894a9765c2d6be86ae9, type: 2}
+  transparentBrainMat: {fileID: 2100000, guid: c055b4f1f2e70a74a9ccf1aec5c39279, type: 2}

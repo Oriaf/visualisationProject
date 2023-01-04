@@ -209,12 +209,12 @@
             "actions": [
                 {
                     "name": "Select",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "33754c03-48ec-46ef-9bc6-22ed6bfdd8e8",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "Dpad",
                     "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
+                    "interactions": "SlowTap",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Select Value",
@@ -289,12 +289,21 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "AdjustTransparency",
+                    "name": "Ldpad",
                     "type": "Value",
                     "id": "3aed58d9-cf69-420d-aa8e-31c2791323c2",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Lclick",
+                    "type": "Value",
+                    "id": "d2146d76-e324-46a6-b942-6df624eab587",
+                    "expectedControlType": "Dpad",
+                    "processors": "",
+                    "interactions": "SlowTap",
                     "initialStateCheck": true
                 }
             ],
@@ -390,29 +399,29 @@
                 {
                     "name": "",
                     "id": "38fffa59-2ef0-4cba-87e7-8236ae9884d3",
-                    "path": "<ValveIndexController>{RightHand}/thumbstick",
+                    "path": "<ValveIndexController>{LeftHand}/thumbstick",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "AdjustTransparency",
+                    "action": "Ldpad",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
                     "id": "15e3d9ba-0b7c-4dce-9172-728c92de29cf",
-                    "path": "<ViveController>{RightHand}/trackpad",
+                    "path": "<ViveController>{LeftHand}/trackpad",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "AdjustTransparency",
+                    "action": "Ldpad",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
                     "id": "c11a4d52-6bec-46c5-95b0-76e31bd5b743",
-                    "path": "<ValveIndexController>{RightHand}/grip",
+                    "path": "<ViveController>{LeftHand}/grip",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -422,12 +431,12 @@
                 },
                 {
                     "name": "",
-                    "id": "fa189313-90f5-4cba-9b5c-c3f956b04fdb",
-                    "path": "<ViveController>{RightHand}/grip",
+                    "id": "68556f1e-906f-4e3c-81ee-76eeee3b169b",
+                    "path": "<ViveController>{LeftHand}/trackpadClicked",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "ToggleTransparency",
+                    "action": "Lclick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -760,24 +769,6 @@
             "id": "461bce25-7762-40c5-b639-f190649be6d6",
             "actions": [
                 {
-                    "name": "Select",
-                    "type": "Button",
-                    "id": "ac96c10b-c955-4a46-8e67-bf16bc069b53",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Select Value",
-                    "type": "Value",
-                    "id": "39bbf1ac-21a3-413d-90f6-6dbf6efeaabe",
-                    "expectedControlType": "Axis",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
                     "name": "Activate",
                     "type": "Button",
                     "id": "41976d89-60de-4deb-bff9-16b4af96b290",
@@ -848,31 +839,27 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "TogglePlay",
+                    "type": "Button",
+                    "id": "48e9c8fd-4226-41e8-a027-c2130b159ffb",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "StepForward",
+                    "type": "Value",
+                    "id": "a3598045-69ed-478e-9c37-c403cfe54161",
+                    "expectedControlType": "Dpad",
+                    "processors": "",
+                    "interactions": "SlowTap",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
-                {
-                    "name": "",
-                    "id": "1ce80054-410d-4112-a332-50faa7fb4f23",
-                    "path": "<XRController>{RightHand}/gripPressed",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Generic XR Controller",
-                    "action": "Select",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "dd433817-216c-46b9-8dd3-f3a4ea1767b9",
-                    "path": "<XRController>{RightHand}/grip",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Generic XR Controller",
-                    "action": "Select Value",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
                 {
                     "name": "",
                     "id": "fa59aed1-ae0b-4074-a58c-294b85f46228",
@@ -969,6 +956,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Annotatepoint",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4ec7c910-c740-4033-ae17-d364fe933a1c",
+                    "path": "<ViveController>{RightHand}/gripPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TogglePlay",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9e1dee55-a2ec-4ac7-a7de-a4bbe8ec499e",
+                    "path": "<ViveController>{RightHand}/trackpadClicked",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "StepForward",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

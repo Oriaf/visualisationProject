@@ -22,40 +22,102 @@ public class VRSimulator : BaseSimulator
 {
     private float densityVisSpeed = 0.2f;
     
-    [Header("VR Settings")]
-    public Transform leftVRController;
-
-    public float leftSens = -0.8f;
-    public float rightSens = 0.7f;
-    public float upSens = 0.6f;
-    public float downSens = -0.6f;
+    [Header("Marker")]
+    public Material transparentMat;
+    public Material solidMat;
+    public Vector3 markerDist;
+    public float markerSizeMin = 0.0001f;
+    public float markerSizeMax = 0.1f;
     
+    [Header("LEFT VR Settings")]
+    public Transform leftVRController;
+    public GameObject leftController;
+
+    public float LleftSens = -0.8f;
+    public float LrightSens = 0.7f;
+    public float LupSens = 0.6f;
+    public float LdownSens = -0.6f;
+    private float preLtrackpad = 0;
+    
+    [SerializeField] private InputActionReference spaceController = null;
+    [SerializeField] private InputActionReference toggleTransparent = null; 
+    [SerializeField] private InputActionReference LtrackClick = null;
+
+    [Header("Right VR Settings")]
+    public Transform rightVRController;
+    private bool transparencyMarkerEnabled;
+    public float RleftSens = -0.7f;
+    public float RrightSens = 0.7f;
+    public float RupSens = 0.6f;
+    public float RdownSens = -0.6f;
+    private float prePlayPauseBool = 0;
+    private float preRtrackpad = 0;    
+    
+    [SerializeField] private InputActionReference togglePlay = null;
     [SerializeField] private InputActionReference timeController = null;
-    [SerializeField] private InputActionReference transparencyController = null;
-    [SerializeField] private InputActionReference toggleTransparent = null;
     [SerializeField] private InputActionReference annotatePoint = null;
+    [SerializeField] private InputActionReference RtrackClick = null;
 
     private bool transparencyToggleInProgress = false; // Todo: Is this actualy unused/superficient?
 
     override protected void handleInput()
     {
-        // Handle VR input
+        // Handle VR input LEFT
         Vector2 timeInputVal = timeController.action.ReadValue<Vector2>();
-        Vector2 transparencyInputVal = transparencyController.action.ReadValue<Vector2>();
-        float toggleVal = toggleTransparent.action.ReadValue<float>();
 
+        float playPauseBool = togglePlay.action.ReadValue<float>();
+        float Rtrackpad = RtrackClick.action.ReadValue<float>();
+
+        // Handle VR input RIGHT
+        Vector2 spaceInputVal = spaceController.action.ReadValue<Vector2>();
+        float toggleVal = toggleTransparent.action.ReadValue<float>();
+        float Ltrackpad = LtrackClick.action.ReadValue<float>();
+        
+        // Start/Stop the User Study
+        if (timeInputVal != Vector2.zero && Rtrackpad == 1 && preRtrackpad == 0)
+        {
+            if (!collectionStarted) startCollectingData();
+            else endCollectData();
+        }
+        
+        if (playPauseBool==1 && prePlayPauseBool==0)
+        {
+            if (paused == true)
+            {
+                paused = false;
+            }
+            else
+            {
+                paused = true;
+            }
+            
+        }
+        prePlayPauseBool = playPauseBool;
+        
+        if (timeInputVal != Vector2.zero && Rtrackpad == 1 && preRtrackpad == 0 &&
+            timeInputVal.y < RupSens && timeInputVal.y > RdownSens && timeInputVal.x < RrightSens && timeInputVal.x > RleftSens)
+        {
+            if (paused)
+            {
+                paused = false;
+            } else
+            {
+                paused = true;
+            }
+        }
+        
         if (timeInputVal != Vector2.zero) // If there is input controlling the playback
         {
             if (applySpaceTimeDensity)
             {
-                if (timeInputVal.x > rightSens) // If there is input to increase the left visbility cutoff
+                if (timeInputVal.x > RrightSens) // If there is input to increase the left visbility cutoff
                 {
                     Vector2 visWindow = volObjScript.GetVisibilityWindow();
                     visWindow.x += densityVisSpeed * Time.deltaTime;
                     if (visWindow.x > visWindow.y) visWindow.x = visWindow.y;
                     volObjScript.SetVisibilityWindow(visWindow);
                 }
-                else if (timeInputVal.x < leftSens) // If there is input to decrease the left visbility window cutoff
+                else if (timeInputVal.x < RleftSens) // If there is input to decrease the left visbility window cutoff
                 {
                     Vector2 visWindow = volObjScript.GetVisibilityWindow();
                     visWindow.x -= densityVisSpeed * Time.deltaTime;
@@ -63,14 +125,14 @@ public class VRSimulator : BaseSimulator
                     volObjScript.SetVisibilityWindow(visWindow);
                 }
 
-                if (timeInputVal.y > upSens) // If there is input to increase the right visibility window cutoff
+                if (timeInputVal.y > RupSens) // If there is input to increase the right visibility window cutoff
                 {
                     Vector2 visWindow = volObjScript.GetVisibilityWindow();
                     visWindow.y += densityVisSpeed * Time.deltaTime;
                     if (visWindow.y > 1.0f) visWindow.y = 1;
                     volObjScript.SetVisibilityWindow(visWindow);
                 }
-                else if (timeInputVal.y < downSens) // If there is input to decrease the right visibility window cutoff
+                else if (timeInputVal.y < RdownSens) // If there is input to decrease the right visibility window cutoff
                 {
                     Vector2 visWindow = volObjScript.GetVisibilityWindow();
                     visWindow.y -= densityVisSpeed * Time.deltaTime;
@@ -80,18 +142,18 @@ public class VRSimulator : BaseSimulator
             }
             else
             {
-                if (timeInputVal.x > rightSens) // If there is input to switch to forward playback
+                if (timeInputVal.x > RrightSens) // If there is input to switch to forward playback
                 {
                     rewind = false;
                     forward = true;
                 }
-                else if (timeInputVal.x < leftSens) // If there is input to rewind
+                else if (timeInputVal.x < RleftSens) // If there is input to rewind
                 {
                     rewind = true;
                     forward = false;
                 }
 
-                if (timeInputVal.y > upSens) // If there is input to increase the playback speed
+                if (timeInputVal.y > RupSens) // If there is input to increase the playback speed
                 {
                     if (playBackSpeed < maxPlaybackSpeed)
                     {
@@ -102,7 +164,7 @@ public class VRSimulator : BaseSimulator
                         playBackSpeed += maxPlaybackSpeed / 2f * timeInputVal.y * Time.deltaTime;
                     }
                 }
-                else if (timeInputVal.y < downSens) // If there is input to reduce the playback speed
+                else if (timeInputVal.y < RdownSens) // If there is input to reduce the playback speed
                 {
                     if (playBackSpeed > 1f)
                     {
@@ -143,5 +205,92 @@ public class VRSimulator : BaseSimulator
         {
             Invoke(nameof(RestartScene), 1f); // Soft restart the scene (method in this script)
         }
+        
+        if (marker.activeSelf == false)
+        {
+
+            marker.SetActive(true);
+            marker.transform.position = leftController.transform.position + leftController.transform.rotation * new Vector3(0, 0, 0.05f);
+            transparencyMarkerEnabled = false;
+            ToggleMarkerTransparency();
+        }
+        if (transparencyMarkerEnabled)
+        {
+            
+            marker.transform.position = leftController.transform.position + leftController.transform.rotation * markerDist;
+        }
+        //Debug.Log(spaceInputVal);
+        if (spaceInputVal != Vector2.zero && preLtrackpad == 0 && Ltrackpad == 1) // If there is input controlling the playback
+        {
+            if (spaceInputVal.y > LupSens)
+            {
+
+                ToggleMarkerTransparency();
+            }
+        }
+
+
+
+        if (spaceInputVal != Vector2.zero && preLtrackpad == 0 && Ltrackpad == 1) // If there is input controlling the playback
+        {
+
+
+            if (spaceInputVal.x > LrightSens)
+            {
+                
+                marker.transform.localScale += 0.001f * new Vector3(1, 1, 1);
+                
+            }
+            else if (spaceInputVal.x < LleftSens)
+            {
+                marker.transform.localScale -= 0.001f * new Vector3(1, 1, 1);
+            }
+
+            if (marker.transform.localScale.x < 0.001)
+            {
+
+                marker.transform.localScale = new Vector3(0.001f, 0.001f, 0.001f);
+            }
+            else if (marker.transform.localScale.x > markerSizeMax)
+            {
+                marker.transform.localScale = new Vector3(markerSizeMax, markerSizeMax, markerSizeMax);
+            }
+
+
+
+        }
+        preLtrackpad = Ltrackpad;
+    }
+    
+    void ToggleMarkerTransparency()
+    {
+        Renderer markerRendererR = marker.GetComponent<Renderer>();
+        if (!transparencyMarkerEnabled)
+        {
+            //markerDist = this.transform.position - marker.transform.position;
+            //marker.transform.position = this.transform.position + transform.rotation * markerDist;
+            markerDist = leftController.transform.position - marker.transform.position;
+            markerDist = new Vector3(0, 0, markerDist.magnitude);
+            markerTransparent();
+            transparencyMarkerEnabled = true;
+        }
+        else if (transparencyMarkerEnabled)
+        {
+            markerSolid();
+            transparencyMarkerEnabled = false;
+
+        }
+    }
+
+
+    void markerTransparent()
+    {
+        Renderer skullRendererE = marker.GetComponent<Renderer>();
+        skullRendererE.material = transparentMat;
+    }
+    void markerSolid()
+    {
+        Renderer skullRendererE = marker.GetComponent<Renderer>();
+        skullRendererE.material = solidMat;
     }
 }
