@@ -207,7 +207,11 @@ public class BaseSimulator : MonoBehaviour
         {
             calculateSpaceTimeDensity(dataList);
             visualizeDensity();
-        }
+
+            // Hide the UI
+            foreach (Text t in FrameStuff) t.enabled = false;
+            slider.enabled = false;
+}
     }
 
     protected virtual void handleInput()
