@@ -4235,9 +4235,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1554036188}
     - target: {fileID: 7692170560713393360, guid: e9458f90d7bef02428a2cd8478888078, type: 3}
+      propertyPath: applyPathTrace
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7692170560713393360, guid: e9458f90d7bef02428a2cd8478888078, type: 3}
       propertyPath: leftController
       value: 
       objectReference: {fileID: 99851666}
+    - target: {fileID: 7692170560713393360, guid: e9458f90d7bef02428a2cd8478888078, type: 3}
+      propertyPath: enableSimulation
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7692170560713393360, guid: e9458f90d7bef02428a2cd8478888078, type: 3}
       propertyPath: leftVRController
       value: 
@@ -4253,6 +4261,10 @@ PrefabInstance:
     - target: {fileID: 7692170560713393360, guid: e9458f90d7bef02428a2cd8478888078, type: 3}
       propertyPath: paths.Array.data[1]
       value: Assets/Recordings/catheter005.txt
+      objectReference: {fileID: 0}
+    - target: {fileID: 7692170560713393360, guid: e9458f90d7bef02428a2cd8478888078, type: 3}
+      propertyPath: applySpaceTimeDensity
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7692170560713393360, guid: e9458f90d7bef02428a2cd8478888078, type: 3}
       propertyPath: FrameStuff.Array.data[0]

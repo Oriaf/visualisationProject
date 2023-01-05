@@ -75,7 +75,7 @@ MonoBehaviour:
   transparentBrainMat: {fileID: 2100000, guid: c055b4f1f2e70a74a9ccf1aec5c39279, type: 2}
   transparentMat: {fileID: 2100000, guid: f1f01de25b7c2fa4694abf8afa5ee295, type: 2}
   solidMat: {fileID: 2100000, guid: 347db0cc6f10b274e9fd3b4cac428b04, type: 2}
-  markerDist: {x: 0, y: 0, z: 1}
+  markerDist: {x: 0, y: 0, z: 0.05}
   markerSizeMin: 0.01
   markerSizeMax: 0.2
   leftVRController: {fileID: 0}
@@ -84,6 +84,7 @@ MonoBehaviour:
   LrightSens: 0.7
   LupSens: 0.6
   LdownSens: -0.6
+  placeMarkerSens: 0.8
   spaceController: {fileID: 6826371102190220578, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   toggleTransparent: {fileID: -2425372059492432088, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   LtrackClick: {fileID: -7872084352427484024, guid: c348712bda248c246b8c49b3db54643f, type: 3}

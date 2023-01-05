@@ -4263,6 +4263,10 @@ PrefabInstance:
       value: Assets/Recordings/catheter007.txt
       objectReference: {fileID: 0}
     - target: {fileID: 7692170560713393360, guid: e9458f90d7bef02428a2cd8478888078, type: 3}
+      propertyPath: applySpaceTimeDensity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7692170560713393360, guid: e9458f90d7bef02428a2cd8478888078, type: 3}
       propertyPath: FrameStuff.Array.data[0]
       value: 
       objectReference: {fileID: 99851669}

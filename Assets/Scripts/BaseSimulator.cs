@@ -103,6 +103,8 @@ public class BaseSimulator : MonoBehaviour
     public float kernelSize = 1.0f;
     private VoxelGrid voxelGrid;
     protected VolumeRenderedObject volObjScript;
+    private GameObject volObj;
+    private bool hasVisualizedDensity = false;
 
     [Header("Simulation")]
     public bool enableSimulation = true;
@@ -216,6 +218,12 @@ public class BaseSimulator : MonoBehaviour
     protected void Update()
     {
         handleInput();
+
+        if (collectionStarted && applySpaceTimeDensity && !hasVisualizedDensity)
+        {
+            volObj.SetActive(true);
+            hasVisualizedDensity = true;
+        }
 
         // The slider visible in the scene displays current playback speed
         if (slider)
@@ -427,6 +435,9 @@ public class BaseSimulator : MonoBehaviour
             obj.transform.position = new Vector3(1.0f, 1.0f, 1.0f);
             //obj.transform.position = new Vector3(0.5f, 0.5f, 0.5f);
             obj.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
+
+            obj.SetActive(false);
+            volObj = obj;
         }
     }
 
