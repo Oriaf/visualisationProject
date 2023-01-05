@@ -122,7 +122,7 @@ public class LookDirection : MonoBehaviour
                 transform.position = marker.transform.position + currentRot * dirToMark;
                 transform.LookAt(marker.transform.position);
                 this.GetComponent<ObserverMovement>().observerPosition = transform.position;
-        }
+        	}
             else if (Input.GetMouseButtonUp(0))
             {
 
@@ -137,7 +137,7 @@ public class LookDirection : MonoBehaviour
 
 
 
-        if (Input.GetMouseButtonDown(2))
+        if (Input.GetMouseButtonDown(0))
         {
             if (marker.activeSelf == false)
             {

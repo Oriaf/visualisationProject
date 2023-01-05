@@ -191,7 +191,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.1
+  near clip plane: 0.01
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -251,7 +251,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c818a7722084594c8511ed8a521a9a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 0.05
+  moveSpeed: 0.025
   observerPosition: {x: 0, y: 0, z: 0}
   orientation: {fileID: 5347637687557509489}
 --- !u!1001 &341759111
