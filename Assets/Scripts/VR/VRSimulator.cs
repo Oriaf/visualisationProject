@@ -228,7 +228,7 @@ public class VRSimulator : BaseSimulator
 
 
 
-        if (spaceInputVal != Vector2.zero && preLtrackpad == 0 && Ltrackpad == 1) // If there is input controlling the playback
+        if (spaceInputVal != Vector2.zero && Ltrackpad == 1) // If there is input controlling the playback
         {
 
 
@@ -243,10 +243,10 @@ public class VRSimulator : BaseSimulator
                 marker.transform.localScale -= 0.001f * new Vector3(1, 1, 1);
             }
 
-            if (marker.transform.localScale.x < 0.001)
+            if (marker.transform.localScale.x < markerSizeMin)
             {
 
-                marker.transform.localScale = new Vector3(0.001f, 0.001f, 0.001f);
+                marker.transform.localScale = new Vector3(markerSizeMin, markerSizeMin, markerSizeMin);
             }
             else if (marker.transform.localScale.x > markerSizeMax)
             {
