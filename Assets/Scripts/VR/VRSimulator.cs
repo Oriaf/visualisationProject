@@ -37,6 +37,7 @@ public class VRSimulator : BaseSimulator
     public float LrightSens = 0.7f;
     public float LupSens = 0.6f;
     public float LdownSens = -0.6f;
+    public float placeMarkerSens = 0.8f;
     private float preLtrackpad = 0;
     private float preMarkerBool = 0;
 
@@ -75,6 +76,8 @@ public class VRSimulator : BaseSimulator
         Vector2 spaceInputVal = spaceController.action.ReadValue<Vector2>();
         float toggleVal = toggleTransparent.action.ReadValue<float>();
         float Ltrackpad = LtrackClick.action.ReadValue<float>();
+
+        //Debug.Log(placerMarkerBool);
         
         // Start/Stop the User Study
         if (playPauseBool==1 && prePlayPauseBool==0)
@@ -220,7 +223,7 @@ public class VRSimulator : BaseSimulator
             marker.transform.position = leftController.transform.position + leftController.transform.rotation * markerDist;
         }
         //Debug.Log(spaceInputVal);
-        if (placerMarkerBool != 0 && preMarkerBool == 0) // Switch between holding and placing the marker
+        if (placerMarkerBool > placeMarkerSens && preMarkerBool <= placeMarkerSens) // Switch between holding and placing the marker
         {
             ToggleMarkerTransparency();
         }

@@ -452,7 +452,7 @@
                 {
                     "name": "",
                     "id": "aae6b182-bd0c-4ff6-8e5b-1e5271c05116",
-                    "path": "<ViveController>{LeftHand}/triggerPressed",
+                    "path": "<ViveController>{LeftHand}/trigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
