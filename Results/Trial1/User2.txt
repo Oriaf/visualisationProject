@@ -1,0 +1,9 @@
+Visualization
+Marker Pos: (1.08, 1.19, 0.52), Ground Truth Pos: (0.97, 1.08, 0.55), Distance: 0.1530145
+Marker Volume: 2.057953E-05, Ground Truth Volume: 1.413717E-05, Difference: 6.442363E-06
+Time-to-Complete: 64.14008s
+
+Density
+Marker Pos: (0.98, 1.09, 0.54), Ground Truth Pos: (0.97, 1.08, 0.55), Distance: 0.009986392
+Marker Volume: 2.873104E-05, Ground Truth Volume: 1.413717E-05, Difference: 1.459388E-05
+Time-to-Complete: 20.6849s
