@@ -305,6 +305,15 @@
                     "processors": "",
                     "interactions": "SlowTap",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "LPlaceMarker",
+                    "type": "Value",
+                    "id": "e3b6a941-5016-46b3-a3e0-d5b0c3aa5575",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -437,6 +446,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Lclick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "aae6b182-bd0c-4ff6-8e5b-1e5271c05116",
+                    "path": "<ViveController>{LeftHand}/triggerPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LPlaceMarker",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

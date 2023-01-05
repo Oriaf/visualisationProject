@@ -38,10 +38,12 @@ public class VRSimulator : BaseSimulator
     public float LupSens = 0.6f;
     public float LdownSens = -0.6f;
     private float preLtrackpad = 0;
-    
+    private float preMarkerBool = 0;
+
     [SerializeField] private InputActionReference spaceController = null;
     [SerializeField] private InputActionReference toggleTransparent = null; 
     [SerializeField] private InputActionReference LtrackClick = null;
+    [SerializeField] private InputActionReference LPlacerMarker = null;
 
     [Header("Right VR Settings")]
     public Transform rightVRController;
@@ -67,6 +69,7 @@ public class VRSimulator : BaseSimulator
 
         float playPauseBool = togglePlay.action.ReadValue<float>();
         float Rtrackpad = RtrackClick.action.ReadValue<float>();
+        float placerMarkerBool = LPlacerMarker.action.ReadValue<float>();
 
         // Handle VR input RIGHT
         Vector2 spaceInputVal = spaceController.action.ReadValue<Vector2>();
@@ -74,12 +77,6 @@ public class VRSimulator : BaseSimulator
         float Ltrackpad = LtrackClick.action.ReadValue<float>();
         
         // Start/Stop the User Study
-        if (timeInputVal != Vector2.zero && Rtrackpad == 1 && preRtrackpad == 0)
-        {
-            if (!collectionStarted) startCollectingData();
-            else endCollectData();
-        }
-        
         if (playPauseBool==1 && prePlayPauseBool==0)
         {
             if (paused == true)
@@ -190,13 +187,16 @@ public class VRSimulator : BaseSimulator
         }
         //Debug.Log("b " + toggleVal);
 
-        if (toggleVal > 0.8f && !transparencyToggleInProgress) //If we got input to toggle transparency
+        // Start/Stop the User Study
+        if (toggleVal > 0.8f && !transparencyToggleInProgress) //If we got input to toggle
         {
             //Debug.Log(toggleVal);
             transparencyToggleInProgress = true;
-            ToggleTransparency(); // Toggle transparency instantly
+
+            if (!collectionStarted) startCollectingData();
+            else endCollectData();
         }
-        else if (toggleVal < 0.1f && transparencyToggleInProgress) // If we no longer have input to toggle transparency
+        else if (toggleVal < 0.1f && transparencyToggleInProgress) // If we no longer have input to toggle
         {
             transparencyToggleInProgress = false;
         }
@@ -206,7 +206,7 @@ public class VRSimulator : BaseSimulator
             Invoke(nameof(RestartScene), 1f); // Soft restart the scene (method in this script)
         }
         
-        if (marker.activeSelf == false)
+        if (marker.activeSelf == false) //Init function for marker
         {
 
             marker.SetActive(true);
@@ -214,20 +214,17 @@ public class VRSimulator : BaseSimulator
             transparencyMarkerEnabled = false;
             ToggleMarkerTransparency();
         }
-        if (transparencyMarkerEnabled)
+        if (transparencyMarkerEnabled) // Update markers position
         {
             
             marker.transform.position = leftController.transform.position + leftController.transform.rotation * markerDist;
         }
         //Debug.Log(spaceInputVal);
-        if (spaceInputVal != Vector2.zero && preLtrackpad == 0 && Ltrackpad == 1) // If there is input controlling the playback
+        if (placerMarkerBool != 0 && preMarkerBool == 0) // Switch between holding and placing the marker
         {
-            if (spaceInputVal.y > LupSens)
-            {
-
-                ToggleMarkerTransparency();
-            }
+            ToggleMarkerTransparency();
         }
+        preMarkerBool = placerMarkerBool;
 
 
 

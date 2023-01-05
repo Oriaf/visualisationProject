@@ -87,6 +87,7 @@ MonoBehaviour:
   spaceController: {fileID: 6826371102190220578, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   toggleTransparent: {fileID: -2425372059492432088, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   LtrackClick: {fileID: -7872084352427484024, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  LPlacerMarker: {fileID: -8871559128515989997, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   rightVRController: {fileID: 0}
   RleftSens: -0.8
   RrightSens: 0.7
