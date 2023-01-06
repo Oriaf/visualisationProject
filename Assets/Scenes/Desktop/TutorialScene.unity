@@ -3167,7 +3167,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2568456569779629957, guid: 31d5f996ea665b44cb57fba70625e5d4, type: 3}
       propertyPath: applySpaceTimeDensity
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2568456569779629957, guid: 31d5f996ea665b44cb57fba70625e5d4, type: 3}
       propertyPath: FrameStuff.Array.data[0]
